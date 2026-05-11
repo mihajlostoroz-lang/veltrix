@@ -1,6 +1,6 @@
-# [Project name]
+# Veltrix Mobile Detailing
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+A full-stack landing page and booking system for Veltrix Mobile Detailing — a mobile car detailing service in Union County, NJ. Customers can book appointments online; the owner manages them through a PIN-protected admin dashboard.
 
 ## Run & Operate
 
@@ -14,7 +14,8 @@ _Replace the heading above with the project's name, and this line with one sente
 ## Stack
 
 - pnpm workspaces, Node.js 24, TypeScript 5.9
-- API: Express 5
+- Frontend: React + Vite + Tailwind (artifacts/veltrix)
+- API: Express 5 (artifacts/api-server)
 - DB: PostgreSQL + Drizzle ORM
 - Validation: Zod (`zod/v4`), `drizzle-zod`
 - API codegen: Orval (from OpenAPI spec)
@@ -22,24 +23,37 @@ _Replace the heading above with the project's name, and this line with one sente
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `artifacts/veltrix/src/pages/LandingPage.tsx` — main landing page (all sections)
+- `artifacts/veltrix/src/components/BookingScheduler.tsx` — 4-step booking flow
+- `artifacts/veltrix/src/pages/AdminPage.tsx` — admin dashboard entry
+- `artifacts/veltrix/src/components/admin/` — dashboard components (StatsBar, DayView, BookingList, BookingCard)
+- `artifacts/api-server/src/routes/bookings.ts` — availability + create booking
+- `artifacts/api-server/src/routes/admin.ts` — list bookings, update status, stats
+- `lib/db/src/schema/bookings.ts` — bookings table schema
+- `lib/api-spec/openapi.yaml` — source of truth for API contracts
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- Contract-first API design: OpenAPI spec → Orval codegen → typed React Query hooks
+- Admin dashboard uses simple PIN auth (sessionStorage) — no backend auth needed for MVP
+- Bookings store date as `DATE` string (YYYY-MM-DD) and timeSlot as `VARCHAR` (HH:MM 24hr)
+- Availability endpoint excludes `cancelled` bookings from conflict checks (only `pending` counts)
+- All admin routes share the same `/api` prefix — no separate admin API server
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+- **Landing page**: Hero, stats, services, pricing, before/after gallery, reviews, service area, contact/booking
+- **Booking scheduler**: 4-step flow — pick service → pick date → pick time slot (live availability) → enter details → confirmation
+- **Admin dashboard** at `/admin` (PIN: `veltrix2024`): stats overview, day-by-day schedule view, all-bookings list with confirm/cancel/restore actions
 
 ## User preferences
 
-_Populate as you build — explicit user instructions worth remembering across sessions._
+- Keep all styling as inline styles matching the original Veltrix brand (blue #2563eb, Syne + DM Sans fonts)
+- Admin PIN is `veltrix2024` — stored in AdminLogin.tsx
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
-
-## Pointers
-
-- See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and package details
+- Always run `pnpm --filter @workspace/api-spec run codegen` after editing `openapi.yaml`
+- The OpenAPI spec cannot have duplicate path keys — combine GET + POST under one `/bookings:` path
+- `pnpm --filter @workspace/db run push` must be run after schema changes before the API server will work
+- Availability check only blocks on `status = 'pending'` bookings — cancelled slots free up automatically

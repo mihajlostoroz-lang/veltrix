@@ -34,6 +34,33 @@ export const GetAvailabilityResponse = zod.object({
 });
 
 /**
+ * @summary List all bookings
+ */
+export const ListBookingsQueryParams = zod.object({
+  date: zod.coerce.string().optional(),
+  status: zod.coerce.string().optional(),
+});
+
+export const ListBookingsResponse = zod.object({
+  bookings: zod.array(
+    zod.object({
+      id: zod.number(),
+      name: zod.string(),
+      phone: zod.string(),
+      email: zod.string().optional(),
+      service: zod.string(),
+      vehicle: zod.string().optional(),
+      date: zod.string(),
+      timeSlot: zod.string(),
+      notes: zod.string().optional(),
+      status: zod.string(),
+      createdAt: zod.string(),
+    }),
+  ),
+  total: zod.number(),
+});
+
+/**
  * @summary Create a new booking
  */
 export const CreateBookingBody = zod.object({
@@ -45,4 +72,40 @@ export const CreateBookingBody = zod.object({
   date: zod.string(),
   timeSlot: zod.string(),
   notes: zod.string().optional(),
+});
+
+/**
+ * @summary Update booking status
+ */
+export const UpdateBookingStatusParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const UpdateBookingStatusBody = zod.object({
+  status: zod.enum(["pending", "confirmed", "cancelled"]),
+});
+
+export const UpdateBookingStatusResponse = zod.object({
+  id: zod.number(),
+  name: zod.string(),
+  phone: zod.string(),
+  email: zod.string().optional(),
+  service: zod.string(),
+  vehicle: zod.string().optional(),
+  date: zod.string(),
+  timeSlot: zod.string(),
+  notes: zod.string().optional(),
+  status: zod.string(),
+  createdAt: zod.string(),
+});
+
+/**
+ * @summary Get booking stats
+ */
+export const GetAdminStatsResponse = zod.object({
+  total: zod.number(),
+  pending: zod.number(),
+  confirmed: zod.number(),
+  cancelled: zod.number(),
+  today: zod.number(),
 });

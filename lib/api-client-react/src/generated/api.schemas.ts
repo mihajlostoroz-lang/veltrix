@@ -45,6 +45,32 @@ export interface BookingResponse {
   createdAt: string;
 }
 
+export interface BookingListResponse {
+  bookings: BookingResponse[];
+  total: number;
+}
+
+export type UpdateBookingStatusRequestStatus =
+  (typeof UpdateBookingStatusRequestStatus)[keyof typeof UpdateBookingStatusRequestStatus];
+
+export const UpdateBookingStatusRequestStatus = {
+  pending: "pending",
+  confirmed: "confirmed",
+  cancelled: "cancelled",
+} as const;
+
+export interface UpdateBookingStatusRequest {
+  status: UpdateBookingStatusRequestStatus;
+}
+
+export interface AdminStats {
+  total: number;
+  pending: number;
+  confirmed: number;
+  cancelled: number;
+  today: number;
+}
+
 export interface ErrorResponse {
   error: string;
 }
@@ -54,4 +80,9 @@ export type GetAvailabilityParams = {
    * Date in YYYY-MM-DD format
    */
   date: string;
+};
+
+export type ListBookingsParams = {
+  date?: string;
+  status?: string;
 };

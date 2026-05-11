@@ -106,8 +106,9 @@ export default function BookingScheduler() {
   const dates = getAvailableDates();
 
   const { data: availability, isLoading: slotsLoading } = useGetAvailability(
-    { date: selectedDate },
-    { query: { enabled: !!selectedDate } }
+    { date: selectedDate || "1970-01-01" },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    { query: { enabled: !!selectedDate } as any }
   );
 
   const { mutate: createBooking, isPending: submitting } = useCreateBooking({
