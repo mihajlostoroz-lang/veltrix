@@ -8,3 +8,50 @@
 export interface HealthStatus {
   status: string;
 }
+
+export interface TimeSlot {
+  time: string;
+  label: string;
+  available: boolean;
+}
+
+export interface AvailabilityResponse {
+  date: string;
+  slots: TimeSlot[];
+}
+
+export interface CreateBookingRequest {
+  name: string;
+  phone: string;
+  email?: string;
+  service: string;
+  vehicle?: string;
+  date: string;
+  timeSlot: string;
+  notes?: string;
+}
+
+export interface BookingResponse {
+  id: number;
+  name: string;
+  phone: string;
+  email?: string;
+  service: string;
+  vehicle?: string;
+  date: string;
+  timeSlot: string;
+  notes?: string;
+  status: string;
+  createdAt: string;
+}
+
+export interface ErrorResponse {
+  error: string;
+}
+
+export type GetAvailabilityParams = {
+  /**
+   * Date in YYYY-MM-DD format
+   */
+  date: string;
+};

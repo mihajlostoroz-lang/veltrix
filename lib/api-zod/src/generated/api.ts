@@ -14,3 +14,35 @@ import * as zod from "zod";
 export const HealthCheckResponse = zod.object({
   status: zod.string(),
 });
+
+/**
+ * @summary Get available time slots for a date
+ */
+export const GetAvailabilityQueryParams = zod.object({
+  date: zod.coerce.string(),
+});
+
+export const GetAvailabilityResponse = zod.object({
+  date: zod.string(),
+  slots: zod.array(
+    zod.object({
+      time: zod.string(),
+      label: zod.string(),
+      available: zod.boolean(),
+    }),
+  ),
+});
+
+/**
+ * @summary Create a new booking
+ */
+export const CreateBookingBody = zod.object({
+  name: zod.string(),
+  phone: zod.string(),
+  email: zod.string().optional(),
+  service: zod.string(),
+  vehicle: zod.string().optional(),
+  date: zod.string(),
+  timeSlot: zod.string(),
+  notes: zod.string().optional(),
+});
