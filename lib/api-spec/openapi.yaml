@@ -199,6 +199,10 @@ components:
           type: string
         vehicle:
           type: string
+          description: Car model (e.g. 2020 Honda Accord)
+        plate:
+          type: string
+          description: License plate number
         date:
           type: string
         timeSlot:
@@ -209,6 +213,8 @@ components:
         - name
         - phone
         - service
+        - vehicle
+        - plate
         - date
         - timeSlot
 
@@ -226,6 +232,8 @@ components:
         service:
           type: string
         vehicle:
+          type: string
+        plate:
           type: string
         date:
           type: string

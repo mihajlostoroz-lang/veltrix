@@ -43,6 +43,7 @@ export default function BookingCard({
           <div style={{ fontSize: ".78rem", color: "#64748b", display: "flex", gap: 12, flexWrap: "wrap" }}>
             <span>🔧 {booking.service}</span>
             <span>📞 <a href={`tel:${booking.phone}`} style={{ color: "#2563eb", textDecoration: "none" }}>{booking.phone}</a></span>
+            {booking.plate && <span>🚘 {booking.plate}</span>}
             {booking.email && <span>✉️ {booking.email}</span>}
           </div>
           {booking.notes && (

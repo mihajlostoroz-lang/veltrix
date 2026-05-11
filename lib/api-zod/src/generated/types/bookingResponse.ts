@@ -13,6 +13,7 @@ export interface BookingResponse {
   email?: string;
   service: string;
   vehicle?: string;
+  plate?: string;
   date: string;
   timeSlot: string;
   notes?: string;

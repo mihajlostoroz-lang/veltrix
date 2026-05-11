@@ -40,18 +40,18 @@ const labelStyle: React.CSSProperties = {
   letterSpacing: ".04em", textTransform: "uppercase", display: "block", marginBottom: 6
 };
 
-// Generate next 30 days starting from tomorrow
+// Generate next 60 days — only Saturdays (6) and Sundays (0)
 function getAvailableDates() {
   const dates: { date: string; day: string; dow: string }[] = [];
   const today = new Date();
-  for (let i = 1; i <= 30; i++) {
+  for (let i = 1; i <= 60; i++) {
     const d = new Date(today);
     d.setDate(today.getDate() + i);
     const dow = d.getDay();
-    if (dow === 0) continue; // skip Sundays
+    if (dow !== 0 && dow !== 6) continue; // weekends only
     const dateStr = d.toISOString().split("T")[0];
     const day = d.getDate().toString();
-    const dowLabel = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][dow];
+    const dowLabel = dow === 0 ? "Sun" : "Sat";
     dates.push({ date: dateStr, day, dow: dowLabel });
   }
   return dates;
@@ -100,8 +100,9 @@ export default function BookingScheduler() {
   const [selectedService, setSelectedService] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedSlot, setSelectedSlot] = useState("");
-  const [form, setForm] = useState({ name: "", phone: "", email: "", vehicle: "", notes: "" });
+  const [form, setForm] = useState({ name: "", phone: "", email: "", vehicle: "", plate: "", notes: "" });
   const [booking, setBooking] = useState<{ id: number; date: string; timeSlot: string; service: string; name: string } | null>(null);
+  const [submitError, setSubmitError] = useState("");
 
   const dates = getAvailableDates();
 
@@ -115,20 +116,27 @@ export default function BookingScheduler() {
     mutation: {
       onSuccess: (data) => {
         setBooking({ id: data.id, date: data.date, timeSlot: data.timeSlot, service: data.service, name: data.name });
+        setSubmitError("");
         setStep(4);
+      },
+      onError: (err: unknown) => {
+        const msg = (err as { response?: { data?: { error?: string } } })?.response?.data?.error;
+        setSubmitError(msg || "Something went wrong. Please try again.");
       },
     }
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitError("");
     createBooking({
       data: {
         name: form.name,
         phone: form.phone,
         email: form.email || undefined,
         service: selectedService,
-        vehicle: form.vehicle || undefined,
+        vehicle: form.vehicle,
+        plate: form.plate,
         date: selectedDate,
         timeSlot: selectedSlot,
         notes: form.notes || undefined,
@@ -158,6 +166,8 @@ export default function BookingScheduler() {
             { label: "Date", val: formatDate(booking.date) },
             { label: "Time", val: slot?.label || booking.timeSlot },
             { label: "Name", val: booking.name },
+            { label: "Vehicle", val: form.vehicle },
+            { label: "Plate", val: form.plate },
           ].map((r) => (
             <div key={r.label} style={{ display: "flex", justifyContent: "space-between", paddingBottom: 10, marginBottom: 10, borderBottom: "1px solid #e2e8f0" }}>
               <span style={{ fontSize: ".82rem", color: "#64748b", fontWeight: 600, letterSpacing: ".03em" }}>{r.label}</span>
@@ -213,7 +223,7 @@ export default function BookingScheduler() {
       {step === 1 && (
         <div>
           <p style={{ fontSize: ".88rem", color: "#64748b", marginBottom: 20, fontWeight: 300 }}>
-            Pick a date — <strong>{selectedService}</strong>. We're available Mon–Sat.
+            Pick a date — <strong>{selectedService}</strong>. We're available <strong>Saturdays & Sundays only</strong>.
           </p>
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 24 }}>
             {dates.map((d) => (
@@ -243,8 +253,11 @@ export default function BookingScheduler() {
       {/* Step 2: Time slot */}
       {step === 2 && (
         <div>
-          <p style={{ fontSize: ".88rem", color: "#64748b", marginBottom: 8, fontWeight: 300 }}>
+          <p style={{ fontSize: ".88rem", color: "#64748b", marginBottom: 4, fontWeight: 300 }}>
             Available slots for <strong>{formatDate(selectedDate)}</strong>
+          </p>
+          <p style={{ fontSize: ".78rem", color: "#94a3b8", marginBottom: 16 }}>
+            Each appointment is 5 hours. Booked slots and overlapping times are shown as unavailable.
           </p>
           {slotsLoading ? (
             <div style={{ textAlign: "center", padding: "32px 0", color: "#64748b" }}>
@@ -265,10 +278,11 @@ export default function BookingScheduler() {
                     cursor: slot.available ? "pointer" : "not-allowed",
                     fontFamily: "'Syne', sans-serif", fontSize: ".9rem", fontWeight: 700,
                     textDecoration: !slot.available ? "line-through" : "none",
-                    transition: "all .2s"
+                    transition: "all .2s",
+                    opacity: slot.available ? 1 : 0.5,
                   }}>
                   {slot.label}
-                  {!slot.available && <span style={{ display: "block", fontSize: ".65rem", fontWeight: 400, textDecoration: "none", marginTop: 2 }}>Booked</span>}
+                  {!slot.available && <span style={{ display: "block", fontSize: ".65rem", fontWeight: 400, textDecoration: "none", marginTop: 2 }}>Unavailable</span>}
                 </button>
               ))}
             </div>
@@ -289,7 +303,7 @@ export default function BookingScheduler() {
           <p style={{ fontSize: ".88rem", color: "#64748b", marginBottom: 20, fontWeight: 300 }}>
             Almost done! Just a few details and we're all set.
           </p>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }} className="form-row2">
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
             <div style={{ marginBottom: 14 }}>
               <label style={labelStyle}>Name *</label>
               <input required style={inputStyle} placeholder="John Smith" value={form.name}
@@ -306,10 +320,17 @@ export default function BookingScheduler() {
             <input type="email" style={inputStyle} placeholder="you@email.com" value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })} />
           </div>
-          <div style={{ marginBottom: 14 }}>
-            <label style={labelStyle}>Vehicle</label>
-            <input style={inputStyle} placeholder="e.g. 2020 Honda Accord Sedan" value={form.vehicle}
-              onChange={(e) => setForm({ ...form, vehicle: e.target.value })} />
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+            <div style={{ marginBottom: 14 }}>
+              <label style={labelStyle}>Car Model *</label>
+              <input required style={inputStyle} placeholder="e.g. 2020 Honda Accord" value={form.vehicle}
+                onChange={(e) => setForm({ ...form, vehicle: e.target.value })} />
+            </div>
+            <div style={{ marginBottom: 14 }}>
+              <label style={labelStyle}>License Plate *</label>
+              <input required style={inputStyle} placeholder="e.g. ABC-1234" value={form.plate}
+                onChange={(e) => setForm({ ...form, plate: e.target.value.toUpperCase() })} />
+            </div>
           </div>
           <div style={{ marginBottom: 14 }}>
             <label style={labelStyle}>Notes</label>
@@ -329,6 +350,15 @@ export default function BookingScheduler() {
               <span>🕐 <strong>{availability?.slots?.find((s: TimeSlot) => s.time === selectedSlot)?.label}</strong></span>
             </div>
           </div>
+
+          {submitError && (
+            <div style={{
+              background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 10,
+              padding: "12px 16px", marginBottom: 16, color: "#dc2626", fontSize: ".85rem"
+            }}>
+              ⚠️ {submitError}
+            </div>
+          )}
 
           <div style={{ display: "flex", gap: 10, justifyContent: "space-between" }}>
             <button type="button" style={btnOutline} onClick={() => setStep(2)}>← Back</button>

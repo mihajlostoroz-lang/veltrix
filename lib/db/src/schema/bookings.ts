@@ -11,6 +11,7 @@ export const bookingsTable = pgTable("bookings", {
   email: varchar("email", { length: 255 }),
   service: text("service").notNull(),
   vehicle: text("vehicle"),
+  plate: varchar("plate", { length: 20 }),
   date: date("date").notNull(),
   timeSlot: varchar("time_slot", { length: 10 }).notNull(),
   notes: text("notes"),
