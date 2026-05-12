@@ -54,6 +54,13 @@ export interface BookingListResponse {
   total: number;
 }
 
+export interface RescheduleBookingRequest {
+  /** New date in YYYY-MM-DD format */
+  date: string;
+  /** New time slot in HH:MM 24hr format */
+  timeSlot: string;
+}
+
 export type UpdateBookingStatusRequestStatus =
   (typeof UpdateBookingStatusRequestStatus)[keyof typeof UpdateBookingStatusRequestStatus];
 

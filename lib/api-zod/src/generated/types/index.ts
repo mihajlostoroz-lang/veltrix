@@ -15,6 +15,7 @@ export * from "./errorResponse";
 export * from "./getAvailabilityParams";
 export * from "./healthStatus";
 export * from "./listBookingsParams";
+export * from "./rescheduleBookingRequest";
 export * from "./timeSlot";
 export * from "./updateBookingStatusRequest";
 export * from "./updateBookingStatusRequestStatus";

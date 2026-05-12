@@ -3,38 +3,9 @@ import { db } from "@workspace/db";
 import { bookingsTable } from "@workspace/db";
 import { eq, and, ne } from "drizzle-orm";
 import { sendBookingNotification, sendCustomerConfirmation } from "../lib/notify.js";
+import { ALL_SLOTS, APPOINTMENT_SPAN, getSlotIndex, isWeekend } from "../lib/slots.js";
 
 const router: IRouter = Router();
-
-const ALL_SLOTS = [
-  { time: "08:00", label: "8:00 AM" },
-  { time: "09:00", label: "9:00 AM" },
-  { time: "10:00", label: "10:00 AM" },
-  { time: "11:00", label: "11:00 AM" },
-  { time: "12:00", label: "12:00 PM" },
-  { time: "13:00", label: "1:00 PM" },
-  { time: "14:00", label: "2:00 PM" },
-  { time: "15:00", label: "3:00 PM" },
-  { time: "16:00", label: "4:00 PM" },
-  { time: "17:00", label: "5:00 PM" },
-];
-
-// Each appointment lasts 5 hours; a booking at slot index T blocks T and the
-// next 5 slots (T+1..T+5). A candidate slot S conflicts with existing booking T
-// when |index(S) - index(T)| <= 5.
-const APPOINTMENT_SPAN = 5;
-
-function getSlotIndex(time: string): number {
-  return ALL_SLOTS.findIndex((s) => s.time === time);
-}
-
-function isWeekend(dateStr: string): boolean {
-  // Parse as local date to avoid timezone shifts
-  const [year, month, day] = dateStr.split("-").map(Number);
-  const d = new Date(year, month - 1, day);
-  const dow = d.getDay();
-  return dow === 0 || dow === 6; // Sunday or Saturday
-}
 
 router.get("/availability", async (req, res) => {
   const { date } = req.query;
@@ -54,7 +25,6 @@ router.get("/availability", async (req, res) => {
     return;
   }
 
-  // Fetch all non-cancelled bookings for this date
   const existing = await db
     .select({ timeSlot: bookingsTable.timeSlot })
     .from(bookingsTable)
@@ -97,7 +67,6 @@ router.post("/bookings", async (req, res) => {
     return;
   }
 
-  // Check for conflicts: any non-cancelled booking within 5 slots of the requested slot
   const existing = await db
     .select({ timeSlot: bookingsTable.timeSlot })
     .from(bookingsTable)
@@ -128,7 +97,6 @@ router.post("/bookings", async (req, res) => {
     })
     .returning();
 
-  // Fire-and-forget — never blocks the response
   void sendBookingNotification(booking);
   void sendCustomerConfirmation(booking);
 

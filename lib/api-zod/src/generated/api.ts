@@ -77,6 +77,33 @@ export const CreateBookingBody = zod.object({
 });
 
 /**
+ * @summary Reschedule a booking to a new date and time slot
+ */
+export const RescheduleBookingParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const RescheduleBookingBody = zod.object({
+  date: zod.string().describe("New date in YYYY-MM-DD format"),
+  timeSlot: zod.string().describe("New time slot in HH:MM 24hr format"),
+});
+
+export const RescheduleBookingResponse = zod.object({
+  id: zod.number(),
+  name: zod.string(),
+  phone: zod.string(),
+  email: zod.string().optional(),
+  service: zod.string(),
+  vehicle: zod.string().optional(),
+  plate: zod.string().optional(),
+  date: zod.string(),
+  timeSlot: zod.string(),
+  notes: zod.string().optional(),
+  status: zod.string(),
+  createdAt: zod.string(),
+});
+
+/**
  * @summary Update booking status
  */
 export const UpdateBookingStatusParams = zod.object({
