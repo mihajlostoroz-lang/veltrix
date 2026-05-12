@@ -53,7 +53,7 @@ export async function sendBookingNotification(booking: Booking): Promise<void> {
       },
       body: JSON.stringify({
         from: "Veltrix Bookings <onboarding@resend.dev>",
-        to: [NOTIFICATION_EMAIL],
+        to: [NOTIFICATION_EMAIL as string],
         subject: `New Booking: ${booking.name} — ${formatDate(booking.date)} at ${formatSlot(booking.timeSlot)}`,
         html,
       }),
