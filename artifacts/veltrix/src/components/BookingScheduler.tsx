@@ -178,7 +178,7 @@ export default function BookingScheduler() {
             { label: "Time", val: slot?.label || booking.timeSlot },
             { label: "Name", val: booking.name },
             { label: "Vehicle", val: form.vehicle },
-            { label: "Plate", val: form.plate },
+            ...(form.plate ? [{ label: "Plate", val: form.plate }] : []),
           ].map((r) => (
             <div key={r.label} style={{ display: "flex", justifyContent: "space-between", paddingBottom: 10, marginBottom: 10, borderBottom: "1px solid rgba(26,26,46,0.07)" }}>
               <span style={{ fontSize: ".8rem", color: "#999", fontWeight: 600, letterSpacing: ".03em" }}>{r.label}</span>
@@ -337,7 +337,7 @@ export default function BookingScheduler() {
             </div>
           </div>
           <div style={{ marginBottom: 14 }}>
-            <label style={labelStyle}>Email</label>
+            <label style={labelStyle}>Email <span style={{ fontWeight: 400, color: "#ccc", textTransform: "none", letterSpacing: 0 }}>(optional)</span></label>
             <input type="email" style={inputStyle} placeholder="you@email.com" value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })} />
           </div>
@@ -348,15 +348,15 @@ export default function BookingScheduler() {
                 onChange={(e) => setForm({ ...form, vehicle: e.target.value })} />
             </div>
             <div style={{ marginBottom: 14 }}>
-              <label style={labelStyle}>License Plate *</label>
-              <input required style={inputStyle} placeholder="e.g. ABC-1234" value={form.plate}
+              <label style={labelStyle}>License Plate <span style={{ fontWeight: 400, color: "#ccc", textTransform: "none", letterSpacing: 0 }}>(optional)</span></label>
+              <input style={inputStyle} placeholder="e.g. ABC-1234" value={form.plate}
                 onChange={(e) => setForm({ ...form, plate: e.target.value.toUpperCase() })} />
             </div>
           </div>
           <div style={{ marginBottom: 14 }}>
-            <label style={labelStyle}>Notes</label>
+            <label style={labelStyle}>Booking Details <span style={{ fontWeight: 400, color: "#ccc", textTransform: "none", letterSpacing: 0 }}>(optional)</span></label>
             <textarea style={{ ...inputStyle, resize: "vertical", minHeight: 80 }}
-              placeholder="Any special requests or conditions we should know?" value={form.notes}
+              placeholder="Any special requests, conditions, or details we should know?" value={form.notes}
               onChange={(e) => setForm({ ...form, notes: e.target.value })} />
           </div>
 

@@ -14,7 +14,7 @@ export interface CreateBookingRequest {
   /** Car model (e.g. 2020 Honda Accord) */
   vehicle: string;
   /** License plate number */
-  plate: string;
+  plate?: string;
   date: string;
   timeSlot: string;
   notes?: string;

@@ -71,7 +71,7 @@ export const CreateBookingBody = zod.object({
   email: zod.string().optional(),
   service: zod.string(),
   vehicle: zod.string().describe("Car model (e.g. 2020 Honda Accord)"),
-  plate: zod.string().describe("License plate number"),
+  plate: zod.string().optional().describe("License plate number"),
   date: zod.string(),
   timeSlot: zod.string(),
   notes: zod.string().optional(),

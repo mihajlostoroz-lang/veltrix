@@ -47,8 +47,8 @@ router.get("/availability", async (req, res) => {
 router.post("/bookings", async (req, res) => {
   const { name, phone, email, service, vehicle, plate, date, timeSlot, notes } = req.body;
 
-  if (!name || !phone || !service || !date || !timeSlot || !vehicle || !plate) {
-    res.status(400).json({ error: "name, phone, service, vehicle, plate, date, and timeSlot are required" });
+  if (!name || !phone || !service || !date || !timeSlot || !vehicle) {
+    res.status(400).json({ error: "name, phone, service, vehicle, date, and timeSlot are required" });
     return;
   }
 

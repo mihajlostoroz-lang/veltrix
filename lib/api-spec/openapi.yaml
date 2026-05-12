@@ -657,7 +657,6 @@ components:
         - phone
         - service
         - vehicle
-        - plate
         - date
         - timeSlot
 
