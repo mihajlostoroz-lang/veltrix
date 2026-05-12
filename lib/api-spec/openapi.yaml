@@ -16,6 +16,8 @@ tags:
     description: Object storage upload and serving endpoints.
   - name: gallery
     description: Gallery photo management endpoints.
+  - name: reviews
+    description: Customer review submission and moderation.
 paths:
   /healthz:
     get:
@@ -188,6 +190,93 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+
+  /reviews:
+    get:
+      operationId: listReviews
+      tags: [reviews]
+      summary: List approved reviews (public)
+      responses:
+        '200':
+          description: Approved reviews
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewListResponse'
+    post:
+      operationId: createReview
+      tags: [reviews]
+      summary: Submit a customer review
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateReviewRequest'
+      responses:
+        '201':
+          description: Review submitted (pending approval)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /admin/reviews:
+    get:
+      operationId: listAdminReviews
+      tags: [reviews]
+      summary: List all reviews for admin
+      parameters:
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [pending, approved, rejected]
+      responses:
+        '200':
+          description: All reviews
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewListResponse'
+
+  /admin/reviews/{id}:
+    patch:
+      operationId: updateReviewStatus
+      tags: [reviews]
+      summary: Approve or reject a review
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateReviewStatusRequest'
+      responses:
+        '200':
+          description: Updated review
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /storage/uploads/request-url:
     post:
@@ -494,6 +583,64 @@ components:
           type: string
       required:
         - error
+
+    ReviewResponse:
+      type: object
+      required: [id, name, rating, text, status, createdAt]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        location:
+          type: string
+        vehicle:
+          type: string
+        rating:
+          type: integer
+        text:
+          type: string
+        status:
+          type: string
+          enum: [pending, approved, rejected]
+        createdAt:
+          type: string
+
+    ReviewListResponse:
+      type: object
+      required: [reviews]
+      properties:
+        reviews:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReviewResponse'
+        total:
+          type: integer
+
+    CreateReviewRequest:
+      type: object
+      required: [name, rating, text]
+      properties:
+        name:
+          type: string
+        location:
+          type: string
+        vehicle:
+          type: string
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+        text:
+          type: string
+
+    UpdateReviewStatusRequest:
+      type: object
+      required: [status]
+      properties:
+        status:
+          type: string
+          enum: [pending, approved, rejected]
 
     UploadUrlRequest:
       type: object

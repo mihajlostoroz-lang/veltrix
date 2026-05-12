@@ -131,6 +131,83 @@ export const UpdateBookingStatusResponse = zod.object({
 });
 
 /**
+ * @summary List approved reviews (public)
+ */
+export const ListReviewsResponse = zod.object({
+  reviews: zod.array(
+    zod.object({
+      id: zod.number(),
+      name: zod.string(),
+      location: zod.string().optional(),
+      vehicle: zod.string().optional(),
+      rating: zod.number(),
+      text: zod.string(),
+      status: zod.enum(["pending", "approved", "rejected"]),
+      createdAt: zod.string(),
+    }),
+  ),
+  total: zod.number().optional(),
+});
+
+/**
+ * @summary Submit a customer review
+ */
+export const createReviewBodyRatingMax = 5;
+
+export const CreateReviewBody = zod.object({
+  name: zod.string(),
+  location: zod.string().optional(),
+  vehicle: zod.string().optional(),
+  rating: zod.number().min(1).max(createReviewBodyRatingMax),
+  text: zod.string(),
+});
+
+/**
+ * @summary List all reviews for admin
+ */
+export const ListAdminReviewsQueryParams = zod.object({
+  status: zod.enum(["pending", "approved", "rejected"]).optional(),
+});
+
+export const ListAdminReviewsResponse = zod.object({
+  reviews: zod.array(
+    zod.object({
+      id: zod.number(),
+      name: zod.string(),
+      location: zod.string().optional(),
+      vehicle: zod.string().optional(),
+      rating: zod.number(),
+      text: zod.string(),
+      status: zod.enum(["pending", "approved", "rejected"]),
+      createdAt: zod.string(),
+    }),
+  ),
+  total: zod.number().optional(),
+});
+
+/**
+ * @summary Approve or reject a review
+ */
+export const UpdateReviewStatusParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const UpdateReviewStatusBody = zod.object({
+  status: zod.enum(["pending", "approved", "rejected"]),
+});
+
+export const UpdateReviewStatusResponse = zod.object({
+  id: zod.number(),
+  name: zod.string(),
+  location: zod.string().optional(),
+  vehicle: zod.string().optional(),
+  rating: zod.number(),
+  text: zod.string(),
+  status: zod.enum(["pending", "approved", "rejected"]),
+  createdAt: zod.string(),
+});
+
+/**
  * @summary Request a presigned URL for file upload
  */
 

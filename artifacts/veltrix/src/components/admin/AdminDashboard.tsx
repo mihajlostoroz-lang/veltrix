@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import { useListAdminReviews } from "@workspace/api-client-react";
 import StatsBar from "./StatsBar";
 import DayView from "./DayView";
 import BookingList from "./BookingList";
 import GalleryManager from "./GalleryManager";
+import ReviewsManager from "./ReviewsManager";
 
-type View = "schedule" | "list" | "gallery";
+type View = "schedule" | "list" | "gallery" | "reviews";
 
 export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const [view, setView] = useState<View>("schedule");
@@ -13,8 +15,10 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const queryClient = useQueryClient();
 
   const refresh = () => queryClient.invalidateQueries();
+  const { data: pendingData } = useListAdminReviews({ status: "pending" });
+  const pendingCount = pendingData?.reviews?.length ?? 0;
 
-  const tabBtn = (v: View, label: string, icon: string) => (
+  const tabBtn = (v: View, label: string, icon: string, badge?: number) => (
     <button
       onClick={() => setView(v)}
       style={{
@@ -23,10 +27,17 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
         border: "none", fontFamily: "'DM Sans', sans-serif",
         background: view === v ? "#2563eb" : "transparent",
         color: view === v ? "#fff" : "#64748b",
-        transition: "all .2s"
+        transition: "all .2s", display: "flex", alignItems: "center", gap: 6
       }}
     >
       {icon} {label}
+      {badge !== undefined && badge > 0 && (
+        <span style={{
+          background: view === v ? "rgba(255,255,255,0.35)" : "#ef4444",
+          color: "#fff", borderRadius: 50, fontSize: ".68rem",
+          fontWeight: 700, padding: "1px 7px", lineHeight: 1.5
+        }}>{badge}</span>
+      )}
     </button>
   );
 
@@ -61,27 +72,27 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
       </div>
 
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "32px 24px" }}>
-        {/* Stats */}
         <StatsBar />
 
-        {/* View switcher */}
         <div style={{
           display: "flex", alignItems: "center", justifyContent: "space-between",
           marginBottom: 24, flexWrap: "wrap", gap: 12
         }}>
           <div style={{
             background: "#fff", borderRadius: 50, padding: 4,
-            border: "1px solid #e2e8f0", display: "inline-flex"
+            border: "1px solid #e2e8f0", display: "inline-flex", gap: 2
           }}>
             {tabBtn("schedule", "Day View", "📅")}
             {tabBtn("list", "All Bookings", "📋")}
             {tabBtn("gallery", "Gallery", "🖼️")}
+            {tabBtn("reviews", "Reviews", "⭐", pendingCount)}
           </div>
         </div>
 
         {view === "schedule" && <DayView selectedDate={selectedDate} onDateChange={setSelectedDate} />}
         {view === "list" && <BookingList />}
         {view === "gallery" && <GalleryManager />}
+        {view === "reviews" && <ReviewsManager />}
       </div>
     </div>
   );

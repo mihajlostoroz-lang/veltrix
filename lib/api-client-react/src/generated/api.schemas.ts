@@ -86,6 +86,56 @@ export interface ErrorResponse {
   error: string;
 }
 
+export type ReviewResponseStatus =
+  (typeof ReviewResponseStatus)[keyof typeof ReviewResponseStatus];
+
+export const ReviewResponseStatus = {
+  pending: "pending",
+  approved: "approved",
+  rejected: "rejected",
+} as const;
+
+export interface ReviewResponse {
+  id: number;
+  name: string;
+  location?: string;
+  vehicle?: string;
+  rating: number;
+  text: string;
+  status: ReviewResponseStatus;
+  createdAt: string;
+}
+
+export interface ReviewListResponse {
+  reviews: ReviewResponse[];
+  total?: number;
+}
+
+export interface CreateReviewRequest {
+  name: string;
+  location?: string;
+  vehicle?: string;
+  /**
+   * @minimum 1
+   * @maximum 5
+   */
+  rating: number;
+  text: string;
+}
+
+export type UpdateReviewStatusRequestStatus =
+  (typeof UpdateReviewStatusRequestStatus)[keyof typeof UpdateReviewStatusRequestStatus];
+
+export const UpdateReviewStatusRequestStatus = {
+  pending: "pending",
+  approved: "approved",
+  rejected: "rejected",
+} as const;
+
+export interface UpdateReviewStatusRequest {
+  status: UpdateReviewStatusRequestStatus;
+}
+
 export interface UploadUrlRequest {
   /** @minLength 1 */
   name: string;
@@ -138,6 +188,19 @@ export type ListBookingsParams = {
   date?: string;
   status?: string;
 };
+
+export type ListAdminReviewsParams = {
+  status?: ListAdminReviewsStatus;
+};
+
+export type ListAdminReviewsStatus =
+  (typeof ListAdminReviewsStatus)[keyof typeof ListAdminReviewsStatus];
+
+export const ListAdminReviewsStatus = {
+  pending: "pending",
+  approved: "approved",
+  rejected: "rejected",
+} as const;
 
 export type ListGalleryPhotosParams = {
   service?: string;

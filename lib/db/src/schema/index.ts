@@ -19,3 +19,4 @@
 
 export * from "./bookings";
 export * from "./galleryPhotos";
+export * from "./reviews";

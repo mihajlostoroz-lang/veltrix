@@ -23,15 +23,20 @@ import type {
   BookingResponse,
   CreateBookingRequest,
   CreateGalleryPhotoRequest,
+  CreateReviewRequest,
   ErrorResponse,
   GalleryPhotoListResponse,
   GalleryPhotoResponse,
   GetAvailabilityParams,
   HealthStatus,
+  ListAdminReviewsParams,
   ListBookingsParams,
   ListGalleryPhotosParams,
   RescheduleBookingRequest,
+  ReviewListResponse,
+  ReviewResponse,
   UpdateBookingStatusRequest,
+  UpdateReviewStatusRequest,
   UploadUrlRequest,
   UploadUrlResponse,
 } from "./api.schemas";
@@ -568,6 +573,352 @@ export const useUpdateBookingStatus = <
   TContext
 > => {
   return useMutation(getUpdateBookingStatusMutationOptions(options));
+};
+
+/**
+ * @summary List approved reviews (public)
+ */
+export const getListReviewsUrl = () => {
+  return `/api/reviews`;
+};
+
+export const listReviews = async (
+  options?: RequestInit,
+): Promise<ReviewListResponse> => {
+  return customFetch<ReviewListResponse>(getListReviewsUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getListReviewsQueryKey = () => {
+  return [`/api/reviews`] as const;
+};
+
+export const getListReviewsQueryOptions = <
+  TData = Awaited<ReturnType<typeof listReviews>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listReviews>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getListReviewsQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof listReviews>>> = ({
+    signal,
+  }) => listReviews({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listReviews>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListReviewsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listReviews>>
+>;
+export type ListReviewsQueryError = ErrorType<unknown>;
+
+/**
+ * @summary List approved reviews (public)
+ */
+
+export function useListReviews<
+  TData = Awaited<ReturnType<typeof listReviews>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listReviews>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListReviewsQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Submit a customer review
+ */
+export const getCreateReviewUrl = () => {
+  return `/api/reviews`;
+};
+
+export const createReview = async (
+  createReviewRequest: CreateReviewRequest,
+  options?: RequestInit,
+): Promise<ReviewResponse> => {
+  return customFetch<ReviewResponse>(getCreateReviewUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(createReviewRequest),
+  });
+};
+
+export const getCreateReviewMutationOptions = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createReview>>,
+    TError,
+    { data: BodyType<CreateReviewRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createReview>>,
+  TError,
+  { data: BodyType<CreateReviewRequest> },
+  TContext
+> => {
+  const mutationKey = ["createReview"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createReview>>,
+    { data: BodyType<CreateReviewRequest> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return createReview(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CreateReviewMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createReview>>
+>;
+export type CreateReviewMutationBody = BodyType<CreateReviewRequest>;
+export type CreateReviewMutationError = ErrorType<ErrorResponse>;
+
+/**
+ * @summary Submit a customer review
+ */
+export const useCreateReview = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createReview>>,
+    TError,
+    { data: BodyType<CreateReviewRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof createReview>>,
+  TError,
+  { data: BodyType<CreateReviewRequest> },
+  TContext
+> => {
+  return useMutation(getCreateReviewMutationOptions(options));
+};
+
+/**
+ * @summary List all reviews for admin
+ */
+export const getListAdminReviewsUrl = (params?: ListAdminReviewsParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/api/admin/reviews?${stringifiedParams}`
+    : `/api/admin/reviews`;
+};
+
+export const listAdminReviews = async (
+  params?: ListAdminReviewsParams,
+  options?: RequestInit,
+): Promise<ReviewListResponse> => {
+  return customFetch<ReviewListResponse>(getListAdminReviewsUrl(params), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getListAdminReviewsQueryKey = (
+  params?: ListAdminReviewsParams,
+) => {
+  return [`/api/admin/reviews`, ...(params ? [params] : [])] as const;
+};
+
+export const getListAdminReviewsQueryOptions = <
+  TData = Awaited<ReturnType<typeof listAdminReviews>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: ListAdminReviewsParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listAdminReviews>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getListAdminReviewsQueryKey(params);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof listAdminReviews>>
+  > = ({ signal }) => listAdminReviews(params, { signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listAdminReviews>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListAdminReviewsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listAdminReviews>>
+>;
+export type ListAdminReviewsQueryError = ErrorType<unknown>;
+
+/**
+ * @summary List all reviews for admin
+ */
+
+export function useListAdminReviews<
+  TData = Awaited<ReturnType<typeof listAdminReviews>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: ListAdminReviewsParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listAdminReviews>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListAdminReviewsQueryOptions(params, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Approve or reject a review
+ */
+export const getUpdateReviewStatusUrl = (id: number) => {
+  return `/api/admin/reviews/${id}`;
+};
+
+export const updateReviewStatus = async (
+  id: number,
+  updateReviewStatusRequest: UpdateReviewStatusRequest,
+  options?: RequestInit,
+): Promise<ReviewResponse> => {
+  return customFetch<ReviewResponse>(getUpdateReviewStatusUrl(id), {
+    ...options,
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(updateReviewStatusRequest),
+  });
+};
+
+export const getUpdateReviewStatusMutationOptions = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateReviewStatus>>,
+    TError,
+    { id: number; data: BodyType<UpdateReviewStatusRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof updateReviewStatus>>,
+  TError,
+  { id: number; data: BodyType<UpdateReviewStatusRequest> },
+  TContext
+> => {
+  const mutationKey = ["updateReviewStatus"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof updateReviewStatus>>,
+    { id: number; data: BodyType<UpdateReviewStatusRequest> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return updateReviewStatus(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type UpdateReviewStatusMutationResult = NonNullable<
+  Awaited<ReturnType<typeof updateReviewStatus>>
+>;
+export type UpdateReviewStatusMutationBody =
+  BodyType<UpdateReviewStatusRequest>;
+export type UpdateReviewStatusMutationError = ErrorType<ErrorResponse>;
+
+/**
+ * @summary Approve or reject a review
+ */
+export const useUpdateReviewStatus = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateReviewStatus>>,
+    TError,
+    { id: number; data: BodyType<UpdateReviewStatusRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof updateReviewStatus>>,
+  TError,
+  { id: number; data: BodyType<UpdateReviewStatusRequest> },
+  TContext
+> => {
+  return useMutation(getUpdateReviewStatusMutationOptions(options));
 };
 
 /**
