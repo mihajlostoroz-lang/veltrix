@@ -18,6 +18,10 @@ tags:
     description: Gallery photo management endpoints.
   - name: reviews
     description: Customer review submission and moderation.
+  - name: auth
+    description: Admin authentication.
+  - name: gallery-pairs
+    description: Before/after gallery pair management.
 paths:
   /healthz:
     get:
@@ -161,6 +165,32 @@ paths:
                 $ref: "#/components/schemas/ErrorResponse"
 
   /bookings/{id}:
+    delete:
+      operationId: deleteBooking
+      tags: [bookings]
+      summary: Delete a booking permanently
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
     patch:
       operationId: updateBookingStatus
       tags: [bookings]
@@ -190,6 +220,153 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+
+  /admin/login:
+    post:
+      operationId: adminLogin
+      tags: [auth]
+      summary: Log in as admin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminLoginRequest'
+      responses:
+        '200':
+          description: Logged in
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminSessionResponse'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /admin/logout:
+    post:
+      operationId: adminLogout
+      tags: [auth]
+      summary: Log out
+      responses:
+        '200':
+          description: Logged out
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+
+  /admin/me:
+    get:
+      operationId: getAdminMe
+      tags: [auth]
+      summary: Check admin session status
+      responses:
+        '200':
+          description: Session info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminSessionResponse'
+
+  /gallery/pairs:
+    get:
+      operationId: listGalleryPairs
+      tags: [gallery-pairs]
+      summary: List all before/after pairs
+      responses:
+        '200':
+          description: Gallery pairs
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GalleryPairListResponse'
+    post:
+      operationId: createGalleryPair
+      tags: [gallery-pairs]
+      summary: Create a before/after pair
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGalleryPairRequest'
+      responses:
+        '201':
+          description: Created pair
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GalleryPairResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /gallery/pairs/{id}:
+    patch:
+      operationId: updateGalleryPair
+      tags: [gallery-pairs]
+      summary: Edit service name or caption for a pair
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateGalleryPairRequest'
+      responses:
+        '200':
+          description: Updated pair
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GalleryPairResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      operationId: deleteGalleryPair
+      tags: [gallery-pairs]
+      summary: Delete a before/after pair
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /reviews:
     get:
@@ -552,7 +729,7 @@ components:
       properties:
         status:
           type: string
-          enum: [pending, confirmed, cancelled]
+          enum: [pending, confirmed, cancelled, completed]
       required:
         - status
 
@@ -641,6 +818,71 @@ components:
         status:
           type: string
           enum: [pending, approved, rejected]
+
+    AdminLoginRequest:
+      type: object
+      required: [username, password]
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+
+    AdminSessionResponse:
+      type: object
+      required: [authenticated]
+      properties:
+        authenticated:
+          type: boolean
+        username:
+          type: string
+
+    GalleryPairResponse:
+      type: object
+      required: [id, beforePath, afterPath, createdAt]
+      properties:
+        id:
+          type: integer
+        service:
+          type: string
+        caption:
+          type: string
+        beforePath:
+          type: string
+        afterPath:
+          type: string
+        createdAt:
+          type: string
+
+    GalleryPairListResponse:
+      type: object
+      required: [pairs]
+      properties:
+        pairs:
+          type: array
+          items:
+            $ref: '#/components/schemas/GalleryPairResponse'
+
+    CreateGalleryPairRequest:
+      type: object
+      required: [beforePath, afterPath]
+      properties:
+        service:
+          type: string
+        caption:
+          type: string
+        beforePath:
+          type: string
+        afterPath:
+          type: string
+
+    UpdateGalleryPairRequest:
+      type: object
+      properties:
+        service:
+          type: string
+        caption:
+          type: string
 
     UploadUrlRequest:
       type: object

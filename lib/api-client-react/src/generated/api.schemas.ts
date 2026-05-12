@@ -68,6 +68,7 @@ export const UpdateBookingStatusRequestStatus = {
   pending: "pending",
   confirmed: "confirmed",
   cancelled: "cancelled",
+  completed: "completed",
 } as const;
 
 export interface UpdateBookingStatusRequest {
@@ -136,6 +137,41 @@ export interface UpdateReviewStatusRequest {
   status: UpdateReviewStatusRequestStatus;
 }
 
+export interface AdminLoginRequest {
+  username: string;
+  password: string;
+}
+
+export interface AdminSessionResponse {
+  authenticated: boolean;
+  username?: string;
+}
+
+export interface GalleryPairResponse {
+  id: number;
+  service?: string;
+  caption?: string;
+  beforePath: string;
+  afterPath: string;
+  createdAt: string;
+}
+
+export interface GalleryPairListResponse {
+  pairs: GalleryPairResponse[];
+}
+
+export interface CreateGalleryPairRequest {
+  service?: string;
+  caption?: string;
+  beforePath: string;
+  afterPath: string;
+}
+
+export interface UpdateGalleryPairRequest {
+  service?: string;
+  caption?: string;
+}
+
 export interface UploadUrlRequest {
   /** @minLength 1 */
   name: string;
@@ -187,6 +223,18 @@ export type GetAvailabilityParams = {
 export type ListBookingsParams = {
   date?: string;
   status?: string;
+};
+
+export type DeleteBooking200 = {
+  success?: boolean;
+};
+
+export type AdminLogout200 = {
+  success?: boolean;
+};
+
+export type DeleteGalleryPair200 = {
+  success?: boolean;
 };
 
 export type ListAdminReviewsParams = {

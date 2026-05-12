@@ -6,14 +6,22 @@
  * OpenAPI spec version: 0.1.0
  */
 
+export * from "./adminLoginRequest";
+export * from "./adminLogout200";
+export * from "./adminSessionResponse";
 export * from "./adminStats";
 export * from "./availabilityResponse";
 export * from "./bookingListResponse";
 export * from "./bookingResponse";
 export * from "./createBookingRequest";
+export * from "./createGalleryPairRequest";
 export * from "./createGalleryPhotoRequest";
 export * from "./createReviewRequest";
+export * from "./deleteBooking200";
+export * from "./deleteGalleryPair200";
 export * from "./errorResponse";
+export * from "./galleryPairListResponse";
+export * from "./galleryPairResponse";
 export * from "./galleryPhotoListResponse";
 export * from "./galleryPhotoResponse";
 export * from "./getAvailabilityParams";
@@ -29,6 +37,7 @@ export * from "./reviewResponseStatus";
 export * from "./timeSlot";
 export * from "./updateBookingStatusRequest";
 export * from "./updateBookingStatusRequestStatus";
+export * from "./updateGalleryPairRequest";
 export * from "./updateReviewStatusRequest";
 export * from "./updateReviewStatusRequestStatus";
 export * from "./uploadUrlRequest";

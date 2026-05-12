@@ -105,6 +105,17 @@ export const RescheduleBookingResponse = zod.object({
 });
 
 /**
+ * @summary Delete a booking permanently
+ */
+export const DeleteBookingParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const DeleteBookingResponse = zod.object({
+  success: zod.boolean().optional(),
+});
+
+/**
  * @summary Update booking status
  */
 export const UpdateBookingStatusParams = zod.object({
@@ -112,7 +123,7 @@ export const UpdateBookingStatusParams = zod.object({
 });
 
 export const UpdateBookingStatusBody = zod.object({
-  status: zod.enum(["pending", "confirmed", "cancelled"]),
+  status: zod.enum(["pending", "confirmed", "cancelled", "completed"]),
 });
 
 export const UpdateBookingStatusResponse = zod.object({
@@ -128,6 +139,92 @@ export const UpdateBookingStatusResponse = zod.object({
   notes: zod.string().optional(),
   status: zod.string(),
   createdAt: zod.string(),
+});
+
+/**
+ * @summary Log in as admin
+ */
+export const AdminLoginBody = zod.object({
+  username: zod.string(),
+  password: zod.string(),
+});
+
+export const AdminLoginResponse = zod.object({
+  authenticated: zod.boolean(),
+  username: zod.string().optional(),
+});
+
+/**
+ * @summary Log out
+ */
+export const AdminLogoutResponse = zod.object({
+  success: zod.boolean().optional(),
+});
+
+/**
+ * @summary Check admin session status
+ */
+export const GetAdminMeResponse = zod.object({
+  authenticated: zod.boolean(),
+  username: zod.string().optional(),
+});
+
+/**
+ * @summary List all before/after pairs
+ */
+export const ListGalleryPairsResponse = zod.object({
+  pairs: zod.array(
+    zod.object({
+      id: zod.number(),
+      service: zod.string().optional(),
+      caption: zod.string().optional(),
+      beforePath: zod.string(),
+      afterPath: zod.string(),
+      createdAt: zod.string(),
+    }),
+  ),
+});
+
+/**
+ * @summary Create a before/after pair
+ */
+export const CreateGalleryPairBody = zod.object({
+  service: zod.string().optional(),
+  caption: zod.string().optional(),
+  beforePath: zod.string(),
+  afterPath: zod.string(),
+});
+
+/**
+ * @summary Edit service name or caption for a pair
+ */
+export const UpdateGalleryPairParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const UpdateGalleryPairBody = zod.object({
+  service: zod.string().optional(),
+  caption: zod.string().optional(),
+});
+
+export const UpdateGalleryPairResponse = zod.object({
+  id: zod.number(),
+  service: zod.string().optional(),
+  caption: zod.string().optional(),
+  beforePath: zod.string(),
+  afterPath: zod.string(),
+  createdAt: zod.string(),
+});
+
+/**
+ * @summary Delete a before/after pair
+ */
+export const DeleteGalleryPairParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const DeleteGalleryPairResponse = zod.object({
+  success: zod.boolean().optional(),
 });
 
 /**

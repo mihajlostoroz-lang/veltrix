@@ -3,17 +3,18 @@ import { db } from "@workspace/db";
 import { bookingsTable } from "@workspace/db";
 import { eq, and, ne, desc, count } from "drizzle-orm";
 import { getSlotIndex, isWeekend, getServiceDuration, hasConflict } from "../lib/slots.js";
+import { requireAdmin } from "./auth.js";
 
 const router: IRouter = Router();
 
-// GET /bookings — list all with optional ?date= and ?status= filters
-router.get("/bookings", async (req, res) => {
+// GET /bookings — list all bookings (admin only)
+router.get("/bookings", requireAdmin, async (req, res) => {
   const { date, status } = req.query;
 
   const conditions = [];
   if (date && typeof date === "string") conditions.push(eq(bookingsTable.date, date));
   if (status && typeof status === "string") {
-    const validStatuses = ["pending", "confirmed", "cancelled"] as const;
+    const validStatuses = ["pending", "confirmed", "cancelled", "completed"] as const;
     if (validStatuses.includes(status as (typeof validStatuses)[number])) {
       conditions.push(eq(bookingsTable.status, status as (typeof validStatuses)[number]));
     }
@@ -28,9 +29,9 @@ router.get("/bookings", async (req, res) => {
   res.json({ bookings, total: bookings.length });
 });
 
-// POST /bookings/:id/reschedule — move to a new date + time slot
-router.post("/bookings/:id/reschedule", async (req, res) => {
-  const id = parseInt(req.params.id, 10);
+// POST /bookings/:id/reschedule — move to a new date + time slot (admin only)
+router.post("/bookings/:id/reschedule", requireAdmin, async (req, res) => {
+  const id = parseInt(String(req.params.id), 10);
   if (isNaN(id)) {
     res.status(400).json({ error: "Invalid booking ID" });
     return;
@@ -58,7 +59,6 @@ router.post("/bookings/:id/reschedule", async (req, res) => {
     return;
   }
 
-  // Get the current booking so we can exclude its own slot from conflict check
   const [current] = await db
     .select({ date: bookingsTable.date, timeSlot: bookingsTable.timeSlot })
     .from(bookingsTable)
@@ -70,7 +70,6 @@ router.post("/bookings/:id/reschedule", async (req, res) => {
     return;
   }
 
-  // Fetch all non-cancelled bookings on the new date, excluding this booking
   const existing = await db
     .select({ timeSlot: bookingsTable.timeSlot, service: bookingsTable.service })
     .from(bookingsTable)
@@ -82,7 +81,6 @@ router.post("/bookings/:id/reschedule", async (req, res) => {
       ),
     );
 
-  // Use the rescheduled booking's own service duration for conflict checking
   const [currentBooking] = await db
     .select({ service: bookingsTable.service })
     .from(bookingsTable)
@@ -106,18 +104,18 @@ router.post("/bookings/:id/reschedule", async (req, res) => {
   res.json(updated);
 });
 
-// PATCH /bookings/:id — update status
-router.patch("/bookings/:id", async (req, res) => {
-  const id = parseInt(req.params.id, 10);
+// PATCH /bookings/:id — update status (admin only)
+router.patch("/bookings/:id", requireAdmin, async (req, res) => {
+  const id = parseInt(String(req.params.id), 10);
   if (isNaN(id)) {
     res.status(400).json({ error: "Invalid booking ID" });
     return;
   }
 
   const { status } = req.body;
-  const validStatuses = ["pending", "confirmed", "cancelled"] as const;
+  const validStatuses = ["pending", "confirmed", "cancelled", "completed"] as const;
   if (!status || !validStatuses.includes(status)) {
-    res.status(400).json({ error: "status must be one of: pending, confirmed, cancelled" });
+    res.status(400).json({ error: "status must be one of: pending, confirmed, cancelled, completed" });
     return;
   }
 
@@ -135,15 +133,34 @@ router.patch("/bookings/:id", async (req, res) => {
   res.json(updated);
 });
 
-// GET /admin/stats
-router.get("/admin/stats", async (_req, res) => {
+// DELETE /bookings/:id — permanently delete (admin only)
+router.delete("/bookings/:id", requireAdmin, async (req, res) => {
+  const id = parseInt(String(req.params.id), 10);
+  if (isNaN(id)) {
+    res.status(400).json({ error: "Invalid booking ID" });
+    return;
+  }
+  const [deleted] = await db
+    .delete(bookingsTable)
+    .where(eq(bookingsTable.id, id))
+    .returning({ id: bookingsTable.id });
+  if (!deleted) {
+    res.status(404).json({ error: "Booking not found" });
+    return;
+  }
+  res.json({ success: true });
+});
+
+// GET /admin/stats (admin only)
+router.get("/admin/stats", requireAdmin, async (_req, res) => {
   const today = new Date().toISOString().split("T")[0];
 
-  const [total, pending, confirmed, cancelled, todayCount] = await Promise.all([
+  const [total, pending, confirmed, cancelled, completed, todayCount] = await Promise.all([
     db.select({ count: count() }).from(bookingsTable),
     db.select({ count: count() }).from(bookingsTable).where(eq(bookingsTable.status, "pending")),
     db.select({ count: count() }).from(bookingsTable).where(eq(bookingsTable.status, "confirmed")),
     db.select({ count: count() }).from(bookingsTable).where(eq(bookingsTable.status, "cancelled")),
+    db.select({ count: count() }).from(bookingsTable).where(eq(bookingsTable.status, "completed")),
     db.select({ count: count() }).from(bookingsTable).where(and(eq(bookingsTable.date, today), eq(bookingsTable.status, "pending"))),
   ]);
 
@@ -152,6 +169,7 @@ router.get("/admin/stats", async (_req, res) => {
     pending: pending[0]?.count ?? 0,
     confirmed: confirmed[0]?.count ?? 0,
     cancelled: cancelled[0]?.count ?? 0,
+    completed: completed[0]?.count ?? 0,
     today: todayCount[0]?.count ?? 0,
   });
 });

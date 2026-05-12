@@ -2,6 +2,7 @@ import { Router, type IRouter } from "express";
 import { db } from "@workspace/db";
 import { reviewsTable } from "@workspace/db";
 import { eq, desc } from "drizzle-orm";
+import { requireAdmin } from "./auth.js";
 
 const router: IRouter = Router();
 
@@ -37,8 +38,8 @@ router.get("/reviews", async (_req, res) => {
   res.json({ reviews: rows });
 });
 
-// GET /admin/reviews — list all reviews for admin
-router.get("/admin/reviews", async (req, res) => {
+// GET /admin/reviews — list all reviews for admin (protected)
+router.get("/admin/reviews", requireAdmin, async (req, res) => {
   const { status } = req.query;
   const validStatuses = ["pending", "approved", "rejected"] as const;
   type Status = (typeof validStatuses)[number];
@@ -59,9 +60,9 @@ router.get("/admin/reviews", async (req, res) => {
   res.json({ reviews: rows, total: rows.length });
 });
 
-// PATCH /admin/reviews/:id — approve or reject
-router.patch("/admin/reviews/:id", async (req, res) => {
-  const id = parseInt(req.params.id, 10);
+// PATCH /admin/reviews/:id — approve or reject (protected)
+router.patch("/admin/reviews/:id", requireAdmin, async (req, res) => {
+  const id = parseInt(String(req.params.id), 10);
   if (isNaN(id)) {
     res.status(400).json({ error: "Invalid review ID" });
     return;

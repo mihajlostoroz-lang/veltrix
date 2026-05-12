@@ -19,4 +19,5 @@
 
 export * from "./bookings";
 export * from "./galleryPhotos";
+export * from "./galleryPairs";
 export * from "./reviews";

@@ -2,6 +2,7 @@ import { Router, type IRouter } from "express";
 import { db } from "@workspace/db";
 import { galleryPhotosTable } from "@workspace/db";
 import { eq, asc } from "drizzle-orm";
+import { requireAdmin } from "./auth.js";
 
 const router: IRouter = Router();
 
@@ -13,7 +14,7 @@ router.get("/gallery/photos", async (req, res) => {
   res.json({ photos: rows });
 });
 
-router.post("/gallery/photos", async (req, res) => {
+router.post("/gallery/photos", requireAdmin, async (req, res) => {
   const { service, photoType, objectPath, caption, sortOrder } = req.body;
   if (!service || !photoType || !objectPath) {
     res.status(400).json({ error: "service, photoType, and objectPath are required" });
@@ -34,8 +35,8 @@ router.post("/gallery/photos", async (req, res) => {
   res.status(201).json(photo);
 });
 
-router.delete("/gallery/photos/:id", async (req, res) => {
-  const id = parseInt(req.params.id, 10);
+router.delete("/gallery/photos/:id", requireAdmin, async (req, res) => {
+  const id = parseInt(String(req.params.id), 10);
   if (isNaN(id)) {
     res.status(400).json({ error: "Invalid photo ID" });
     return;

@@ -2,7 +2,7 @@ import { pgTable, serial, text, date, varchar, timestamp, pgEnum } from "drizzle
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod/v4";
 
-export const bookingStatusEnum = pgEnum("booking_status", ["pending", "confirmed", "cancelled"]);
+export const bookingStatusEnum = pgEnum("booking_status", ["pending", "confirmed", "cancelled", "completed"]);
 
 export const bookingsTable = pgTable("bookings", {
   id: serial("id").primaryKey(),

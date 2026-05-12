@@ -1,13 +1,49 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useGetAdminMe, useAdminLogout } from "@workspace/api-client-react";
+import { useQueryClient } from "@tanstack/react-query";
 import AdminLogin from "@/components/admin/AdminLogin";
 import AdminDashboard from "@/components/admin/AdminDashboard";
 
 export default function AdminPage() {
-  const [authed, setAuthed] = useState(() => sessionStorage.getItem("veltrix_admin") === "1");
+  const [checked, setChecked] = useState(false);
+  const [authed, setAuthed] = useState(false);
+  const qc = useQueryClient();
 
-  if (!authed) {
-    return <AdminLogin onSuccess={() => { sessionStorage.setItem("veltrix_admin", "1"); setAuthed(true); }} />;
+  const { data, isLoading } = useGetAdminMe();
+
+  const { mutate: logout } = useAdminLogout({
+    mutation: {
+      onSuccess: () => {
+        qc.clear();
+        setAuthed(false);
+      }
+    }
+  });
+
+  useEffect(() => {
+    if (!isLoading) {
+      setAuthed(data?.authenticated === true);
+      setChecked(true);
+    }
+  }, [isLoading, data]);
+
+  if (!checked || isLoading) {
+    return (
+      <div style={{
+        minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center",
+        background: "linear-gradient(150deg, #ffffff 0%, #eff6ff 55%, #dbeafe 100%)"
+      }}>
+        <div style={{ textAlign: "center", color: "#94a3b8", fontFamily: "'DM Sans', sans-serif" }}>
+          <div style={{ fontSize: "2rem", marginBottom: 12 }}>🔐</div>
+          <p>Checking session…</p>
+        </div>
+      </div>
+    );
   }
 
-  return <AdminDashboard onLogout={() => { sessionStorage.removeItem("veltrix_admin"); setAuthed(false); }} />;
+  if (!authed) {
+    return <AdminLogin onSuccess={() => { qc.invalidateQueries(); setAuthed(true); }} />;
+  }
+
+  return <AdminDashboard onLogout={() => logout()} />;
 }

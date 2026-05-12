@@ -4,9 +4,10 @@ export default function StatsBar() {
   const { data } = useGetAdminStats();
 
   const cards = [
-    { label: "Total Bookings", value: data?.total ?? "—", icon: "📊", color: "#2563eb" },
+    { label: "Total", value: data?.total ?? "—", icon: "📊", color: "#2563eb" },
     { label: "Pending", value: data?.pending ?? "—", icon: "⏳", color: "#f59e0b" },
     { label: "Confirmed", value: data?.confirmed ?? "—", icon: "✅", color: "#16a34a" },
+    { label: "Completed", value: (data as (typeof data & { completed?: number }))?.completed ?? "—", icon: "🏁", color: "#0284c7" },
     { label: "Cancelled", value: data?.cancelled ?? "—", icon: "❌", color: "#ef4444" },
     { label: "Today", value: data?.today ?? "—", icon: "📅", color: "#8b5cf6" },
   ];
