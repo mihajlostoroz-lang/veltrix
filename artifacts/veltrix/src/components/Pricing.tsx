@@ -72,78 +72,79 @@ export default function Pricing() {
   }, []);
 
   return (
-    <section id="pricing" ref={ref} style={{ background: "#ffffff", padding: "96px 5%" }}>
+    <section id="pricing" ref={ref} style={{ background: "#f5f4f0", padding: "96px 5%" }}>
       <div className="reveal" style={{ textAlign: "center", marginBottom: 60 }}>
         <div style={{
-          display: "inline-block", fontSize: ".75rem", fontWeight: 700,
-          letterSpacing: ".1em", textTransform: "uppercase",
-          color: "#2563eb", background: "#dbeafe",
-          padding: "6px 16px", borderRadius: 50, marginBottom: 14
-        }}>Transparent Pricing</div>
+          fontSize: ".72rem", fontWeight: 700, letterSpacing: ".12em",
+          textTransform: "uppercase", color: "#2563eb", marginBottom: 12
+        }}>Pricing</div>
         <h2 style={{
-          fontFamily: "'Syne', sans-serif",
-          fontSize: "clamp(1.9rem, 4vw, 2.9rem)",
-          fontWeight: 800, letterSpacing: "-1.2px",
-          color: "#0f172a", marginBottom: 14
-        }}>Simple, Honest Prices</h2>
-        <p style={{ fontSize: "1rem", color: "#64748b", lineHeight: 1.72, fontWeight: 300, maxWidth: 520, margin: "0 auto" }}>
+          fontFamily: "'Poppins', sans-serif",
+          fontSize: "clamp(2rem, 4vw, 3rem)",
+          fontWeight: 800, letterSpacing: "-2px", color: "#1a1a2e", marginBottom: 14
+        }}>Simple, Honest Pricing</h2>
+        <p style={{ fontSize: ".95rem", color: "#888", lineHeight: 1.72, maxWidth: 480, margin: "0 auto" }}>
           No hidden fees. Prices shown are for standard sedans. Add $20–$30 for SUVs and trucks.
         </p>
       </div>
 
       <div style={{
         display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-        gap: 28, maxWidth: 1060, margin: "0 auto"
+        gap: 20, maxWidth: 1060, margin: "0 auto"
       }}>
         {plans.map((p) => (
           <div key={p.badge} className="reveal" style={{
-            borderRadius: 20,
-            padding: "42px 34px",
-            border: p.popular ? "1.5px solid #2563eb" : "1.5px solid #e2e8f0",
-            background: p.popular ? "linear-gradient(155deg, #eff6ff 0%, #fff 100%)" : "#fff",
-            boxShadow: p.popular ? "0 16px 60px rgba(37,99,235,0.16)" : "none",
-            transition: "all .3s",
-            position: "relative"
+            borderRadius: 22,
+            padding: "42px 32px",
+            background: p.popular ? "#2563eb" : "#fff",
+            position: "relative",
+            boxShadow: p.popular ? "0 20px 60px rgba(37,99,235,0.25)" : "0 2px 24px rgba(26,26,46,0.06)",
+            border: p.popular ? "none" : "1px solid rgba(26,26,46,0.08)"
           }}>
             {p.popular && (
               <div style={{
-                position: "absolute", top: -14, left: "50%", transform: "translateX(-50%)",
-                background: "#2563eb", color: "#fff",
-                fontSize: ".72rem", fontWeight: 700, letterSpacing: ".06em", textTransform: "uppercase",
-                padding: "5px 20px", borderRadius: 50, whiteSpace: "nowrap"
+                position: "absolute", top: -13, left: "50%", transform: "translateX(-50%)",
+                background: "#1a1a2e", color: "#fff",
+                fontSize: ".62rem", fontWeight: 700, letterSpacing: ".1em", textTransform: "uppercase",
+                padding: "5px 18px", borderRadius: 100, whiteSpace: "nowrap"
               }}>Most Popular</div>
             )}
-            <div style={{ fontFamily: "'Syne', sans-serif", fontSize: ".8rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: ".08em", color: "#2563eb", marginBottom: 10 }}>
-              {p.badge}
-            </div>
             <div style={{
-              fontFamily: "'Syne', sans-serif", fontSize: "3rem", fontWeight: 800,
-              color: "#0f172a", letterSpacing: "-2px", lineHeight: 1, marginBottom: 4
+              fontSize: ".72rem", fontWeight: 700, textTransform: "uppercase",
+              letterSpacing: ".1em",
+              color: p.popular ? "rgba(255,255,255,0.65)" : "#2563eb",
+              marginBottom: 14
+            }}>{p.badge}</div>
+            <div style={{
+              fontFamily: "'Poppins', sans-serif", fontSize: "3.5rem", fontWeight: 900,
+              color: p.popular ? "#fff" : "#1a1a2e",
+              letterSpacing: "-2.5px", lineHeight: 1, marginBottom: 6
             }}>
-              <sup style={{ fontSize: "1.4rem", verticalAlign: "super" }}>$</sup>{p.price}
+              <sup style={{ fontSize: "1.3rem", verticalAlign: "super" }}>$</sup>{p.price}
             </div>
-            <div style={{ fontSize: ".82rem", color: "#64748b", marginBottom: 6 }}>{p.range}</div>
-            <div style={{ fontSize: ".78rem", color: "#2563eb", fontWeight: 500, marginBottom: 26 }}>{p.note}</div>
-            <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 11, marginBottom: 32, padding: 0 }}>
+            <div style={{ fontSize: ".8rem", color: p.popular ? "rgba(255,255,255,0.55)" : "#999", marginBottom: 6 }}>{p.range}</div>
+            <div style={{ fontSize: ".78rem", color: p.popular ? "rgba(255,255,255,0.6)" : "#2563eb", fontWeight: 600, marginBottom: 28 }}>{p.note}</div>
+            <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 12, marginBottom: 32, padding: 0 }}>
               {p.features.map((f) => (
-                <li key={f} style={{ fontSize: ".875rem", color: "#1e293b", display: "flex", alignItems: "center", gap: 10, fontWeight: 300 }}>
+                <li key={f} style={{
+                  fontSize: ".875rem",
+                  color: p.popular ? "rgba(255,255,255,0.88)" : "#444",
+                  display: "flex", alignItems: "flex-start", gap: 10, fontWeight: 400
+                }}>
                   <span style={{
-                    width: 22, height: 22, flexShrink: 0,
-                    background: "#dbeafe", color: "#2563eb",
-                    borderRadius: "50%", display: "inline-flex", alignItems: "center", justifyContent: "center",
-                    fontSize: ".68rem", fontWeight: 800
+                    flexShrink: 0, marginTop: 2,
+                    color: p.popular ? "rgba(255,255,255,0.7)" : "#2563eb",
+                    fontSize: ".8rem", fontWeight: 700
                   }}>✓</span>
                   {f}
                 </li>
               ))}
             </ul>
             <a href="#contact" style={{
-              display: "block", textAlign: "center", padding: 13, borderRadius: 50,
-              fontSize: ".9rem", fontWeight: 500, textDecoration: "none",
-              background: p.popular ? "#2563eb" : "transparent",
-              color: p.popular ? "#fff" : "#0f172a",
-              border: p.popular ? "none" : "1.5px solid #e2e8f0",
-              boxShadow: p.popular ? "0 6px 24px rgba(37,99,235,0.28)" : "none"
+              display: "block", textAlign: "center", padding: "13px", borderRadius: 100,
+              fontSize: ".9rem", fontWeight: 600, textDecoration: "none",
+              background: p.popular ? "#fff" : "#1a1a2e",
+              color: p.popular ? "#2563eb" : "#fff",
             }}>Book This</a>
           </div>
         ))}
@@ -151,34 +152,28 @@ export default function Pricing() {
 
       {/* Add-ons */}
       <div className="reveal" style={{
-        maxWidth: 1060, margin: "40px auto 0",
-        background: "#f5f8ff", borderRadius: 20,
-        padding: "36px 40px", border: "1px solid #e2e8f0"
+        maxWidth: 1060, margin: "32px auto 0",
+        background: "#fff", borderRadius: 20,
+        padding: "32px 36px", border: "1px solid rgba(26,26,46,0.08)"
       }}>
         <div style={{
-          fontFamily: "'Syne', sans-serif", fontSize: "1.1rem", fontWeight: 700,
-          color: "#0f172a", marginBottom: 22
-        }}>⚡ Add-On Services</div>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 14 }}>
+          fontFamily: "'Poppins', sans-serif", fontSize: "1rem", fontWeight: 700,
+          color: "#1a1a2e", marginBottom: 20
+        }}>Add-On Services</div>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
           {addons.map((a) => (
             <div key={a.name} style={{
               display: "flex", alignItems: "center", gap: 10,
-              background: "#ffffff", border: "1px solid #e2e8f0",
-              borderRadius: 50, padding: "10px 20px"
+              background: "#f5f4f0", border: "1px solid rgba(26,26,46,0.08)",
+              borderRadius: 100, padding: "9px 20px"
             }}>
-              <span style={{ fontSize: "1.1rem" }}>{a.icon}</span>
-              <span style={{ fontSize: ".85rem", fontWeight: 500, color: "#0f172a" }}>{a.name}</span>
+              <span style={{ fontSize: "1rem" }}>{a.icon}</span>
+              <span style={{ fontSize: ".85rem", fontWeight: 500, color: "#1a1a2e" }}>{a.name}</span>
               <span style={{ fontSize: ".82rem", fontWeight: 700, color: "#2563eb", marginLeft: 4 }}>{a.price}</span>
             </div>
           ))}
         </div>
       </div>
-
-      <style>{`
-        @media (max-width: 560px) {
-          .pricing-addons-wrap { padding: 28px 20px !important; }
-        }
-      `}</style>
     </section>
   );
 }

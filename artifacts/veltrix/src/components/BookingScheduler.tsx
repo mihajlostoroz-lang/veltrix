@@ -12,35 +12,41 @@ const SERVICES = [
 ];
 
 const btn: React.CSSProperties = {
+  background: "#1a1a2e", color: "#fff",
+  padding: "12px 28px", borderRadius: 100,
+  fontSize: ".88rem", fontWeight: 600, border: "none",
+  cursor: "pointer", fontFamily: "'Poppins', sans-serif",
+};
+
+const btnBlue: React.CSSProperties = {
   background: "#2563eb", color: "#fff",
-  padding: "13px 32px", borderRadius: 50,
-  fontSize: ".9rem", fontWeight: 500, border: "none",
-  cursor: "pointer", fontFamily: "'DM Sans', sans-serif",
-  boxShadow: "0 4px 16px rgba(37,99,235,0.28)"
+  padding: "12px 28px", borderRadius: 100,
+  fontSize: ".88rem", fontWeight: 600, border: "none",
+  cursor: "pointer", fontFamily: "'Poppins', sans-serif",
 };
 
 const btnOutline: React.CSSProperties = {
-  background: "transparent", color: "#2563eb",
-  border: "1.5px solid #2563eb",
-  padding: "13px 32px", borderRadius: 50,
-  fontSize: ".9rem", fontWeight: 500, cursor: "pointer",
-  fontFamily: "'DM Sans', sans-serif"
+  background: "transparent", color: "#1a1a2e",
+  border: "1px solid rgba(26,26,46,0.2)",
+  padding: "12px 28px", borderRadius: 100,
+  fontSize: ".88rem", fontWeight: 500, cursor: "pointer",
+  fontFamily: "'Poppins', sans-serif"
 };
 
 const inputStyle: React.CSSProperties = {
-  border: "1.5px solid #e2e8f0", borderRadius: 12,
+  border: "1px solid rgba(26,26,46,0.15)", borderRadius: 12,
   padding: "12px 16px", fontSize: ".9rem",
-  fontFamily: "'DM Sans', sans-serif",
-  color: "#0f172a", background: "#ffffff", outline: "none",
+  fontFamily: "'Poppins', sans-serif",
+  color: "#1a1a2e", background: "#fff", outline: "none",
   width: "100%", boxSizing: "border-box"
 };
 
 const labelStyle: React.CSSProperties = {
-  fontSize: ".75rem", fontWeight: 600, color: "#64748b",
-  letterSpacing: ".04em", textTransform: "uppercase", display: "block", marginBottom: 6
+  fontSize: ".72rem", fontWeight: 700, color: "#999",
+  letterSpacing: ".05em", textTransform: "uppercase",
+  display: "block", marginBottom: 6
 };
 
-// Generate next 60 days — only Saturdays (6) and Sundays (0)
 function getAvailableDates() {
   const dates: { date: string; day: string; dow: string }[] = [];
   const today = new Date();
@@ -48,7 +54,7 @@ function getAvailableDates() {
     const d = new Date(today);
     d.setDate(today.getDate() + i);
     const dow = d.getDay();
-    if (dow !== 0 && dow !== 6) continue; // weekends only
+    if (dow !== 0 && dow !== 6) continue;
     const dateStr = d.toISOString().split("T")[0];
     const day = d.getDate().toString();
     const dowLabel = dow === 0 ? "Sun" : "Sat";
@@ -69,24 +75,29 @@ function StepIndicator({ step }: { step: number }) {
     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 0, marginBottom: 32 }}>
       {steps.map((s, i) => (
         <div key={s} style={{ display: "flex", alignItems: "center" }}>
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 5 }}>
             <div style={{
-              width: 32, height: 32, borderRadius: "50%",
-              background: i < step ? "#2563eb" : i === step ? "#2563eb" : "#e2e8f0",
-              color: i <= step ? "#fff" : "#94a3b8",
+              width: 30, height: 30, borderRadius: "50%",
+              background: i <= step ? "#1a1a2e" : "rgba(26,26,46,0.1)",
+              color: i <= step ? "#fff" : "#bbb",
               display: "flex", alignItems: "center", justifyContent: "center",
-              fontSize: ".78rem", fontWeight: 700,
-              boxShadow: i === step ? "0 0 0 4px rgba(37,99,235,0.15)" : "none",
+              fontSize: ".75rem", fontWeight: 700,
+              boxShadow: i === step ? "0 0 0 4px rgba(26,26,46,0.1)" : "none",
               transition: "all .3s"
             }}>
               {i < step ? "✓" : i + 1}
             </div>
-            <span style={{ fontSize: ".65rem", color: i === step ? "#2563eb" : "#94a3b8", fontWeight: 600, letterSpacing: ".04em", textTransform: "uppercase" }}>{s}</span>
+            <span style={{
+              fontSize: ".62rem", fontWeight: 700, letterSpacing: ".04em",
+              textTransform: "uppercase",
+              color: i === step ? "#1a1a2e" : "#bbb"
+            }}>{s}</span>
           </div>
           {i < steps.length - 1 && (
             <div style={{
-              width: 48, height: 2, marginBottom: 18, marginLeft: 2, marginRight: 2,
-              background: i < step ? "#2563eb" : "#e2e8f0", transition: "background .3s"
+              width: 44, height: 1.5, marginBottom: 18, marginLeft: 2, marginRight: 2,
+              background: i < step ? "#1a1a2e" : "rgba(26,26,46,0.12)",
+              transition: "background .3s"
             }} />
           )}
         </div>
@@ -149,16 +160,16 @@ export default function BookingScheduler() {
     const slot = availability?.slots?.find((s: TimeSlot) => s.time === booking.timeSlot);
     return (
       <div style={{ textAlign: "center", padding: "20px 0" }}>
-        <div style={{ fontSize: "3.5rem", marginBottom: 16 }}>🎉</div>
-        <h3 style={{ fontFamily: "'Syne', sans-serif", fontSize: "1.5rem", fontWeight: 800, color: "#0f172a", marginBottom: 8 }}>
+        <div style={{ fontSize: "3rem", marginBottom: 16 }}>🎉</div>
+        <h3 style={{ fontFamily: "'Poppins', sans-serif", fontSize: "1.4rem", fontWeight: 800, color: "#1a1a2e", marginBottom: 8 }}>
           Booking Confirmed!
         </h3>
-        <p style={{ color: "#64748b", lineHeight: 1.7, marginBottom: 28, fontSize: ".95rem" }}>
-          We'll reach out at <strong>{form.phone}</strong> to confirm your appointment.
+        <p style={{ color: "#888", lineHeight: 1.7, marginBottom: 28, fontSize: ".92rem" }}>
+          We'll reach out at <strong style={{ color: "#1a1a2e" }}>{form.phone}</strong> to confirm your appointment.
         </p>
         <div style={{
-          background: "#f5f8ff", borderRadius: 16, padding: "24px 28px",
-          border: "1px solid #dbeafe", marginBottom: 28, textAlign: "left"
+          background: "#fff", borderRadius: 16, padding: "24px 28px",
+          border: "1px solid rgba(26,26,46,0.08)", marginBottom: 28, textAlign: "left"
         }}>
           {[
             { label: "Booking #", val: `VTX-${String(booking.id).padStart(4, "0")}` },
@@ -169,20 +180,20 @@ export default function BookingScheduler() {
             { label: "Vehicle", val: form.vehicle },
             { label: "Plate", val: form.plate },
           ].map((r) => (
-            <div key={r.label} style={{ display: "flex", justifyContent: "space-between", paddingBottom: 10, marginBottom: 10, borderBottom: "1px solid #e2e8f0" }}>
-              <span style={{ fontSize: ".82rem", color: "#64748b", fontWeight: 600, letterSpacing: ".03em" }}>{r.label}</span>
-              <span style={{ fontSize: ".88rem", color: "#0f172a", fontWeight: 500 }}>{r.val}</span>
+            <div key={r.label} style={{ display: "flex", justifyContent: "space-between", paddingBottom: 10, marginBottom: 10, borderBottom: "1px solid rgba(26,26,46,0.07)" }}>
+              <span style={{ fontSize: ".8rem", color: "#999", fontWeight: 600, letterSpacing: ".03em" }}>{r.label}</span>
+              <span style={{ fontSize: ".88rem", color: "#1a1a2e", fontWeight: 500 }}>{r.val}</span>
             </div>
           ))}
           <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <span style={{ fontSize: ".82rem", color: "#64748b", fontWeight: 600, letterSpacing: ".03em" }}>Status</span>
+            <span style={{ fontSize: ".8rem", color: "#999", fontWeight: 600, letterSpacing: ".03em" }}>Status</span>
             <span style={{
-              fontSize: ".82rem", fontWeight: 700, color: "#16a34a",
-              background: "#dcfce7", padding: "3px 12px", borderRadius: 50
+              fontSize: ".8rem", fontWeight: 700, color: "#16a34a",
+              background: "#dcfce7", padding: "3px 12px", borderRadius: 100
             }}>Pending Confirmation</span>
           </div>
         </div>
-        <a href="tel:8623943198" style={{ ...btn, textDecoration: "none", display: "inline-block" }}>
+        <a href="tel:8623943198" style={{ ...btnBlue, textDecoration: "none", display: "inline-block" }}>
           📞 Call Us: (862) 394-3198
         </a>
       </div>
@@ -191,7 +202,7 @@ export default function BookingScheduler() {
 
   return (
     <div>
-      <h3 style={{ fontFamily: "'Syne', sans-serif", fontSize: "1.35rem", fontWeight: 700, color: "#0f172a", marginBottom: 28 }}>
+      <h3 style={{ fontFamily: "'Poppins', sans-serif", fontSize: "1.25rem", fontWeight: 700, color: "#1a1a2e", marginBottom: 28 }}>
         Book Your Detail
       </h3>
 
@@ -200,21 +211,22 @@ export default function BookingScheduler() {
       {/* Step 0: Service */}
       {step === 0 && (
         <div>
-          <p style={{ fontSize: ".88rem", color: "#64748b", marginBottom: 20, fontWeight: 300 }}>What service are you looking for?</p>
+          <p style={{ fontSize: ".88rem", color: "#888", marginBottom: 20 }}>What service are you looking for?</p>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
             {SERVICES.map((s) => (
               <button key={s.id} onClick={() => { setSelectedService(s.label); setStep(1); }}
                 style={{
-                  background: selectedService === s.label ? "#eff6ff" : "#f5f8ff",
-                  border: selectedService === s.label ? "2px solid #2563eb" : "1.5px solid #e2e8f0",
+                  background: selectedService === s.label ? "#1a1a2e" : "#fff",
+                  border: `1px solid ${selectedService === s.label ? "#1a1a2e" : "rgba(26,26,46,0.1)"}`,
                   borderRadius: 14, padding: "16px 14px",
-                  cursor: "pointer", textAlign: "left", transition: "all .2s"
+                  cursor: "pointer", textAlign: "left", transition: "all .2s",
+                  fontFamily: "'Poppins', sans-serif"
                 }}>
                 <div style={{ fontSize: "1.4rem", marginBottom: 6 }}>{s.icon}</div>
-                <div style={{ fontFamily: "'Syne', sans-serif", fontSize: ".85rem", fontWeight: 700, color: "#0f172a", marginBottom: 2 }}>{s.label}</div>
+                <div style={{ fontSize: ".85rem", fontWeight: 700, color: selectedService === s.label ? "#fff" : "#1a1a2e", marginBottom: 2 }}>{s.label}</div>
                 <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
-                  <span style={{ fontSize: ".75rem", color: "#2563eb", fontWeight: 600 }}>{s.price}</span>
-                  <span style={{ fontSize: ".7rem", color: "#94a3b8" }}>· {s.duration}</span>
+                  <span style={{ fontSize: ".75rem", color: selectedService === s.label ? "#93c5fd" : "#2563eb", fontWeight: 600 }}>{s.price}</span>
+                  <span style={{ fontSize: ".7rem", color: selectedService === s.label ? "rgba(255,255,255,0.4)" : "#bbb" }}>· {s.duration}</span>
                 </div>
               </button>
             ))}
@@ -225,27 +237,28 @@ export default function BookingScheduler() {
       {/* Step 1: Date */}
       {step === 1 && (
         <div>
-          <p style={{ fontSize: ".88rem", color: "#64748b", marginBottom: 20, fontWeight: 300 }}>
-            Pick a date — <strong>{selectedService}</strong>. We're available <strong>Saturdays & Sundays only</strong>.
+          <p style={{ fontSize: ".88rem", color: "#888", marginBottom: 20 }}>
+            Pick a date — <strong style={{ color: "#1a1a2e" }}>{selectedService}</strong>. We're available <strong style={{ color: "#1a1a2e" }}>Saturdays & Sundays only</strong>.
           </p>
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 24 }}>
             {dates.map((d) => (
               <button key={d.date} onClick={() => { setSelectedDate(d.date); setSelectedSlot(""); }}
                 style={{
-                  background: selectedDate === d.date ? "#2563eb" : "#f5f8ff",
-                  color: selectedDate === d.date ? "#fff" : "#0f172a",
-                  border: selectedDate === d.date ? "2px solid #2563eb" : "1.5px solid #e2e8f0",
+                  background: selectedDate === d.date ? "#1a1a2e" : "#fff",
+                  color: selectedDate === d.date ? "#fff" : "#1a1a2e",
+                  border: `1px solid ${selectedDate === d.date ? "#1a1a2e" : "rgba(26,26,46,0.1)"}`,
                   borderRadius: 12, padding: "10px 14px",
-                  cursor: "pointer", textAlign: "center", minWidth: 60, transition: "all .2s"
+                  cursor: "pointer", textAlign: "center", minWidth: 58, transition: "all .2s",
+                  fontFamily: "'Poppins', sans-serif"
                 }}>
-                <div style={{ fontSize: ".65rem", fontWeight: 700, opacity: .8, letterSpacing: ".05em" }}>{d.dow}</div>
-                <div style={{ fontFamily: "'Syne', sans-serif", fontSize: "1.1rem", fontWeight: 800 }}>{d.day}</div>
+                <div style={{ fontSize: ".62rem", fontWeight: 700, opacity: .7, letterSpacing: ".05em" }}>{d.dow}</div>
+                <div style={{ fontSize: "1.1rem", fontWeight: 800 }}>{d.day}</div>
               </button>
             ))}
           </div>
           <div style={{ display: "flex", gap: 10, justifyContent: "space-between" }}>
             <button style={btnOutline} onClick={() => setStep(0)}>← Back</button>
-            <button style={{ ...btn, opacity: selectedDate ? 1 : 0.5, cursor: selectedDate ? "pointer" : "not-allowed" }}
+            <button style={{ ...btn, opacity: selectedDate ? 1 : 0.4, cursor: selectedDate ? "pointer" : "not-allowed" }}
               disabled={!selectedDate} onClick={() => setStep(2)}>
               Next: Pick Time →
             </button>
@@ -256,19 +269,19 @@ export default function BookingScheduler() {
       {/* Step 2: Time slot */}
       {step === 2 && (
         <div>
-          <p style={{ fontSize: ".88rem", color: "#64748b", marginBottom: 4, fontWeight: 300 }}>
-            Available slots for <strong>{formatDate(selectedDate)}</strong>
+          <p style={{ fontSize: ".88rem", color: "#888", marginBottom: 4 }}>
+            Available slots for <strong style={{ color: "#1a1a2e" }}>{formatDate(selectedDate)}</strong>
           </p>
-          <p style={{ fontSize: ".78rem", color: "#94a3b8", marginBottom: 16 }}>
+          <p style={{ fontSize: ".78rem", color: "#bbb", marginBottom: 16 }}>
             {(() => {
               const svc = SERVICES.find((s) => s.label === selectedService);
               return svc
-                ? `${selectedService} takes ${svc.duration}. Booked and overlapping times are shown as unavailable.`
-                : "Booked and overlapping times are shown as unavailable.";
+                ? `${selectedService} takes ${svc.duration}. Booked times are shown as unavailable.`
+                : "Booked times are shown as unavailable.";
             })()}
           </p>
           {slotsLoading ? (
-            <div style={{ textAlign: "center", padding: "32px 0", color: "#64748b" }}>
+            <div style={{ textAlign: "center", padding: "32px 0", color: "#999" }}>
               <div style={{ fontSize: "1.5rem", marginBottom: 8 }}>⏳</div>
               Checking availability...
             </div>
@@ -279,25 +292,25 @@ export default function BookingScheduler() {
                   disabled={!slot.available}
                   onClick={() => setSelectedSlot(slot.time)}
                   style={{
-                    background: !slot.available ? "#f1f5f9" : selectedSlot === slot.time ? "#2563eb" : "#f5f8ff",
-                    color: !slot.available ? "#cbd5e1" : selectedSlot === slot.time ? "#fff" : "#0f172a",
-                    border: selectedSlot === slot.time ? "2px solid #2563eb" : "1.5px solid #e2e8f0",
+                    background: !slot.available ? "rgba(26,26,46,0.04)" : selectedSlot === slot.time ? "#1a1a2e" : "#fff",
+                    color: !slot.available ? "#ccc" : selectedSlot === slot.time ? "#fff" : "#1a1a2e",
+                    border: `1px solid ${selectedSlot === slot.time ? "#1a1a2e" : "rgba(26,26,46,0.1)"}`,
                     borderRadius: 12, padding: "14px 10px",
                     cursor: slot.available ? "pointer" : "not-allowed",
-                    fontFamily: "'Syne', sans-serif", fontSize: ".9rem", fontWeight: 700,
+                    fontFamily: "'Poppins', sans-serif", fontSize: ".9rem", fontWeight: 700,
                     textDecoration: !slot.available ? "line-through" : "none",
                     transition: "all .2s",
                     opacity: slot.available ? 1 : 0.5,
                   }}>
                   {slot.label}
-                  {!slot.available && <span style={{ display: "block", fontSize: ".65rem", fontWeight: 400, textDecoration: "none", marginTop: 2 }}>Unavailable</span>}
+                  {!slot.available && <span style={{ display: "block", fontSize: ".62rem", fontWeight: 400, textDecoration: "none", marginTop: 2 }}>Unavailable</span>}
                 </button>
               ))}
             </div>
           )}
           <div style={{ display: "flex", gap: 10, justifyContent: "space-between" }}>
             <button style={btnOutline} onClick={() => setStep(1)}>← Back</button>
-            <button style={{ ...btn, opacity: selectedSlot ? 1 : 0.5, cursor: selectedSlot ? "pointer" : "not-allowed" }}
+            <button style={{ ...btn, opacity: selectedSlot ? 1 : 0.4, cursor: selectedSlot ? "pointer" : "not-allowed" }}
               disabled={!selectedSlot} onClick={() => setStep(3)}>
               Next: Your Details →
             </button>
@@ -308,7 +321,7 @@ export default function BookingScheduler() {
       {/* Step 3: Details */}
       {step === 3 && (
         <form onSubmit={handleSubmit}>
-          <p style={{ fontSize: ".88rem", color: "#64748b", marginBottom: 20, fontWeight: 300 }}>
+          <p style={{ fontSize: ".88rem", color: "#888", marginBottom: 20 }}>
             Almost done! Just a few details and we're all set.
           </p>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
@@ -349,13 +362,13 @@ export default function BookingScheduler() {
 
           {/* Summary */}
           <div style={{
-            background: "#f5f8ff", borderRadius: 12, padding: "14px 18px",
-            border: "1px solid #dbeafe", marginBottom: 20, fontSize: ".85rem"
+            background: "#fff", borderRadius: 12, padding: "14px 18px",
+            border: "1px solid rgba(26,26,46,0.08)", marginBottom: 20, fontSize: ".85rem"
           }}>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 16 }}>
-              <span>🔧 <strong>{selectedService}</strong></span>
-              <span>📅 <strong>{formatDate(selectedDate)}</strong></span>
-              <span>🕐 <strong>{availability?.slots?.find((s: TimeSlot) => s.time === selectedSlot)?.label}</strong></span>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 16, color: "#555" }}>
+              <span>🔧 <strong style={{ color: "#1a1a2e" }}>{selectedService}</strong></span>
+              <span>📅 <strong style={{ color: "#1a1a2e" }}>{formatDate(selectedDate)}</strong></span>
+              <span>🕐 <strong style={{ color: "#1a1a2e" }}>{availability?.slots?.find((s: TimeSlot) => s.time === selectedSlot)?.label}</strong></span>
             </div>
           </div>
 
@@ -371,13 +384,13 @@ export default function BookingScheduler() {
           <div style={{ display: "flex", gap: 10, justifyContent: "space-between" }}>
             <button type="button" style={btnOutline} onClick={() => setStep(2)}>← Back</button>
             <button type="submit" disabled={submitting} style={{
-              ...btn, opacity: submitting ? 0.7 : 1,
+              ...btnBlue, opacity: submitting ? 0.7 : 1,
               cursor: submitting ? "not-allowed" : "pointer"
             }}>
               {submitting ? "Booking..." : "Confirm Booking ✓"}
             </button>
           </div>
-          <p style={{ textAlign: "center", fontSize: ".75rem", color: "#94a3b8", marginTop: 12 }}>
+          <p style={{ textAlign: "center", fontSize: ".72rem", color: "#bbb", marginTop: 12 }}>
             We'll call to confirm within a few hours.
           </p>
         </form>

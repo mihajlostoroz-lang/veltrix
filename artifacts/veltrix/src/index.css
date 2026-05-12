@@ -32,24 +32,24 @@
 }
 
 :root {
-  --background: 0 0% 100%;
-  --foreground: 222 47% 7%;
-  --border: 214 32% 91%;
+  --background: 40 20% 96%;
+  --foreground: 232 37% 14%;
+  --border: 36 20% 88%;
   --card: 0 0% 100%;
-  --card-foreground: 222 47% 7%;
+  --card-foreground: 232 37% 14%;
   --primary: 221 83% 53%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 213 100% 97%;
-  --secondary-foreground: 221 83% 53%;
-  --muted: 214 32% 91%;
+  --secondary: 40 20% 93%;
+  --secondary-foreground: 232 37% 14%;
+  --muted: 36 20% 90%;
   --muted-foreground: 215 16% 47%;
-  --accent: 213 100% 97%;
+  --accent: 40 20% 93%;
   --accent-foreground: 221 83% 53%;
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 100%;
-  --input: 214 32% 91%;
+  --input: 36 20% 88%;
   --ring: 221 83% 53%;
-  --app-font-sans: 'DM Sans', 'Inter', sans-serif;
+  --app-font-sans: 'Poppins', system-ui, sans-serif;
   --app-font-serif: Georgia, serif;
   --app-font-mono: Menlo, monospace;
   --radius: 0.5rem;
@@ -68,14 +68,9 @@
   }
 }
 
-/* Veltrix custom styles */
-.font-syne {
-  font-family: 'Syne', sans-serif;
-}
-
 @keyframes floatY {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-16px); }
+  50% { transform: translateY(-14px); }
 }
 
 @keyframes pulse-dot {
@@ -93,8 +88,8 @@
 
 .reveal {
   opacity: 0;
-  transform: translateY(26px);
-  transition: opacity 0.65s ease, transform 0.65s ease;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
 .reveal.visible {

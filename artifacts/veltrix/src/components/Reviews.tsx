@@ -19,7 +19,7 @@ const STATIC_REVIEWS = [
 
 function StarRow({ rating }: { rating: number }) {
   return (
-    <div style={{ color: "#f59e0b", fontSize: "1rem", marginBottom: 14, letterSpacing: 2 }}>
+    <div style={{ color: "#f59e0b", fontSize: ".95rem", marginBottom: 14, letterSpacing: 2 }}>
       {"★".repeat(rating)}{"☆".repeat(5 - rating)}
     </div>
   );
@@ -31,7 +31,6 @@ export default function Reviews() {
   const { data } = useListReviews({});
   const dynamicReviews = data?.reviews ?? [];
 
-  // If there are approved customer reviews, show those; otherwise show the static set
   const displayReviews = dynamicReviews.length > 0 ? dynamicReviews : STATIC_REVIEWS;
 
   useEffect(() => {
@@ -47,88 +46,93 @@ export default function Reviews() {
   }, []);
 
   return (
-    <section id="reviews" ref={ref} style={{ background: "#ffffff", padding: "96px 5%" }}>
+    <section id="reviews" ref={ref} style={{ background: "#f5f4f0", padding: "96px 5%" }}>
       <div className="reveal" style={{ textAlign: "center", marginBottom: 60 }}>
         <div style={{
-          display: "inline-block", fontSize: ".75rem", fontWeight: 700,
-          letterSpacing: ".1em", textTransform: "uppercase",
-          color: "#2563eb", background: "#dbeafe",
-          padding: "6px 16px", borderRadius: 50, marginBottom: 14
+          fontSize: ".72rem", fontWeight: 700, letterSpacing: ".12em",
+          textTransform: "uppercase", color: "#2563eb", marginBottom: 12
         }}>Customer Reviews</div>
         <h2 style={{
-          fontFamily: "'Syne', sans-serif",
-          fontSize: "clamp(1.9rem, 4vw, 2.9rem)",
-          fontWeight: 800, letterSpacing: "-1.2px",
-          color: "#0f172a", marginBottom: 14
+          fontFamily: "'Poppins', sans-serif",
+          fontSize: "clamp(2rem, 4vw, 3rem)",
+          fontWeight: 800, letterSpacing: "-2px", color: "#1a1a2e", marginBottom: 14
         }}>What Our Clients Say</h2>
-        <p style={{ fontSize: "1rem", color: "#64748b", lineHeight: 1.72, fontWeight: 300, maxWidth: 520, margin: "0 auto" }}>
+        <p style={{ fontSize: ".95rem", color: "#888", lineHeight: 1.72, maxWidth: 480, margin: "0 auto" }}>
           We take pride in every detail. Here's what real customers in Union County say about Veltrix.
         </p>
       </div>
 
       <div style={{
         display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-        gap: 22, maxWidth: 1100, margin: "0 auto"
+        gap: 20, maxWidth: 1100, margin: "0 auto"
       }}>
-        {displayReviews.map((r, i) => (
-          <div
-            key={"id" in r ? r.id : r.name + i}
-            className="reveal review-card-hover"
-            style={{
-              background: "#f5f8ff", borderRadius: 20,
-              padding: 28, border: "1px solid #e2e8f0",
-              transition: "transform .3s, box-shadow .3s"
-            }}
-          >
-            <StarRow rating={r.rating} />
-            <p style={{ fontSize: ".9rem", color: "#1e293b", lineHeight: 1.7, fontWeight: 300, marginBottom: 18, fontStyle: "italic" }}>
-              {r.text.startsWith('"') ? r.text : `"${r.text}"`}
-            </p>
-            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-              <div style={{
-                width: 40, height: 40, borderRadius: "50%",
-                background: "#dbeafe", display: "flex", alignItems: "center",
-                justifyContent: "center", fontSize: "1.1rem"
-              }}>👤</div>
-              <div>
-                <div style={{ fontSize: ".88rem", fontWeight: 600, color: "#0f172a" }}>{r.name}</div>
-                {"loc" in r
-                  ? <div style={{ fontSize: ".76rem", color: "#64748b" }}>{r.loc}</div>
-                  : r.location && <div style={{ fontSize: ".76rem", color: "#64748b" }}>{r.location}</div>
-                }
-                {"vehicle" in r && r.vehicle && (
-                  <div style={{ fontSize: ".72rem", color: "#94a3b8" }}>{r.vehicle}</div>
-                )}
+        {displayReviews.map((r, i) => {
+          const isDark = i % 3 === 1;
+          return (
+            <div
+              key={"id" in r ? r.id : r.name + i}
+              className="reveal review-card-hover"
+              style={{
+                background: isDark ? "#1a1a2e" : "#fff",
+                borderRadius: 22,
+                padding: "30px 28px",
+                border: isDark ? "none" : "1px solid rgba(26,26,46,0.08)",
+                boxShadow: isDark ? "none" : "0 2px 20px rgba(26,26,46,0.05)",
+                transition: "transform .3s, box-shadow .3s"
+              }}
+            >
+              <StarRow rating={r.rating} />
+              <p style={{
+                fontSize: ".9rem",
+                color: isDark ? "rgba(255,255,255,0.7)" : "#555",
+                lineHeight: 1.75, fontWeight: 400,
+                marginBottom: 22, fontStyle: "italic"
+              }}>
+                {r.text.startsWith('"') ? r.text : `"${r.text}"`}
+              </p>
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <div style={{
+                  width: 38, height: 38, borderRadius: "50%",
+                  background: isDark ? "rgba(255,255,255,0.1)" : "#f5f4f0",
+                  display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1rem"
+                }}>👤</div>
+                <div>
+                  <div style={{ fontSize: ".88rem", fontWeight: 700, color: isDark ? "#fff" : "#1a1a2e" }}>{r.name}</div>
+                  {"loc" in r
+                    ? <div style={{ fontSize: ".76rem", color: isDark ? "rgba(255,255,255,0.35)" : "#999" }}>{r.loc}</div>
+                    : r.location && <div style={{ fontSize: ".76rem", color: isDark ? "rgba(255,255,255,0.35)" : "#999" }}>{r.location}</div>
+                  }
+                  {"vehicle" in r && r.vehicle && (
+                    <div style={{ fontSize: ".72rem", color: isDark ? "rgba(255,255,255,0.25)" : "#bbb" }}>{r.vehicle}</div>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
-      {/* CTA strip */}
-      <div className="reveal" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 16, marginTop: 44, flexWrap: "wrap" }}>
+      <div className="reveal" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 14, marginTop: 44, flexWrap: "wrap" }}>
         <div style={{
           display: "inline-flex", alignItems: "center", gap: 10,
-          background: "#ffffff", border: "1px solid #e2e8f0",
-          borderRadius: 50, padding: "12px 24px",
-          fontSize: ".88rem", fontWeight: 500, color: "#0f172a",
-          boxShadow: "0 2px 12px rgba(37,99,235,0.08)"
+          background: "#fff", border: "1px solid rgba(26,26,46,0.08)",
+          borderRadius: 100, padding: "12px 22px",
+          fontSize: ".88rem", fontWeight: 500, color: "#1a1a2e"
         }}>
-          <span style={{ fontSize: "1.2rem" }}>🟦</span>
-          <span>Rated <strong>5.0</strong> on Google</span>
-          <span style={{ color: "#f59e0b", fontSize: ".88rem" }}>★★★★★</span>
+          <span style={{ color: "#f59e0b", fontSize: ".9rem" }}>★★★★★</span>
+          Rated <strong style={{ marginLeft: 4 }}>5.0</strong>&nbsp;on Google
         </div>
 
         <button
           onClick={() => setShowForm(true)}
           style={{
-            background: "#2563eb", color: "#fff", border: "none",
-            padding: "12px 28px", borderRadius: 50, fontSize: ".88rem",
-            fontWeight: 700, cursor: "pointer", fontFamily: "'DM Sans', sans-serif",
-            boxShadow: "0 4px 18px rgba(37,99,235,0.25)", transition: "opacity .2s",
+            background: "#1a1a2e", color: "#fff", border: "none",
+            padding: "12px 26px", borderRadius: 100, fontSize: ".88rem",
+            fontWeight: 600, cursor: "pointer", fontFamily: "'Poppins', sans-serif",
+            transition: "opacity .2s",
           }}
         >
-          ⭐ Leave a Review
+          Leave a Review
         </button>
       </div>
 
@@ -137,7 +141,7 @@ export default function Reviews() {
       <style>{`
         .review-card-hover:hover {
           transform: translateY(-4px);
-          box-shadow: 0 2px 12px rgba(37,99,235,0.08);
+          box-shadow: 0 8px 32px rgba(26,26,46,0.1) !important;
         }
       `}</style>
     </section>

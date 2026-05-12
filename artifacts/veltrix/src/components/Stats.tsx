@@ -23,7 +23,7 @@ export default function Stats() {
   ];
 
   return (
-    <div ref={ref} style={{ background: "#0f172a", padding: "44px 5%" }}>
+    <div ref={ref} style={{ background: "#1a1a2e", padding: "44px 5%" }}>
       <div style={{
         maxWidth: 1100, margin: "0 auto",
         display: "flex", justifyContent: "space-around", flexWrap: "wrap", gap: 28
@@ -31,12 +31,12 @@ export default function Stats() {
         {stats.map((s) => (
           <div key={s.label} className="reveal" style={{ textAlign: "center" }}>
             <div style={{
-              fontFamily: "'Syne', sans-serif", fontSize: "2.4rem", fontWeight: 800,
+              fontFamily: "'Poppins', sans-serif", fontSize: "2.4rem", fontWeight: 800,
               color: "#fff", letterSpacing: "-1.5px"
             }}>
               {s.num}<span style={{ color: "#2563eb" }}>{s.suffix}</span>
             </div>
-            <div style={{ fontSize: ".82rem", color: "#94a3b8", marginTop: 5, letterSpacing: ".03em" }}>
+            <div style={{ fontSize: ".8rem", color: "rgba(255,255,255,0.4)", marginTop: 5, letterSpacing: ".03em" }}>
               {s.label}
             </div>
           </div>
