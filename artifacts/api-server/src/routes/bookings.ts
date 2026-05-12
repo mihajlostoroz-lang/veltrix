@@ -2,7 +2,7 @@ import { Router, type IRouter } from "express";
 import { db } from "@workspace/db";
 import { bookingsTable } from "@workspace/db";
 import { eq, and, ne } from "drizzle-orm";
-import { sendBookingNotification } from "../lib/notify.js";
+import { sendBookingNotification, sendCustomerConfirmation } from "../lib/notify.js";
 
 const router: IRouter = Router();
 
@@ -130,6 +130,7 @@ router.post("/bookings", async (req, res) => {
 
   // Fire-and-forget — never blocks the response
   void sendBookingNotification(booking);
+  void sendCustomerConfirmation(booking);
 
   res.status(201).json(booking);
 });
