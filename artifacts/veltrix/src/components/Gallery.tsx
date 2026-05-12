@@ -1,8 +1,5 @@
 import { useEffect, useRef } from "react";
 import { useListGalleryPhotos } from "@workspace/api-client-react";
-import exteriorHero from "@assets/IMG_1794_1778547880956.jpeg";
-import exteriorBefore from "@assets/IMG_1795_1778547880956.jpeg";
-import exteriorAfter from "@assets/IMG_1793_1778547880956.jpeg";
 
 type StaticCard = {
   title: string;
@@ -16,11 +13,9 @@ type StaticCard = {
 
 const STATIC_CARDS: StaticCard[] = [
   {
+    beforeEmoji: "🚗", afterEmoji: "✨",
     title: "Full Exterior Wash",
     desc: "Hand wash, clay bar, wax, tire shine & trim dressing",
-    heroImg: exteriorHero,
-    beforeImg: exteriorBefore,
-    afterImg: exteriorAfter,
   },
   {
     beforeEmoji: "🟤", afterEmoji: "✨",
