@@ -10,7 +10,7 @@ export interface GalleryPairResponse {
   id: number;
   service?: string;
   caption?: string;
-  beforePath: string;
-  afterPath: string;
+  beforePath?: string;
+  afterPath?: string;
   createdAt: string;
 }

@@ -18,15 +18,15 @@ router.get("/gallery/pairs", async (_req, res) => {
 // POST /gallery/pairs — admin only
 router.post("/gallery/pairs", requireAdmin, async (req, res) => {
   const { service, caption, beforePath, afterPath } = req.body;
-  if (!beforePath || !afterPath) {
-    res.status(400).json({ error: "beforePath and afterPath are required" });
+  if (!beforePath && !afterPath) {
+    res.status(400).json({ error: "At least one of beforePath or afterPath is required" });
     return;
   }
   const [pair] = await db.insert(galleryPairsTable).values({
     service: service || null,
     caption: caption || null,
-    beforePath,
-    afterPath,
+    beforePath: beforePath || null,
+    afterPath: afterPath || null,
   }).returning();
   res.status(201).json(pair);
 });
@@ -36,10 +36,17 @@ router.patch("/gallery/pairs/:id", requireAdmin, async (req, res) => {
   const id = parseInt(String(req.params.id), 10);
   if (isNaN(id)) { res.status(400).json({ error: "Invalid ID" }); return; }
 
-  const { service, caption } = req.body;
-  const updates: Partial<{ service: string | null; caption: string | null }> = {};
+  const { service, caption, beforePath, afterPath } = req.body;
+  const updates: Partial<{
+    service: string | null;
+    caption: string | null;
+    beforePath: string | null;
+    afterPath: string | null;
+  }> = {};
   if (service !== undefined) updates.service = service || null;
   if (caption !== undefined) updates.caption = caption || null;
+  if (beforePath !== undefined) updates.beforePath = beforePath || null;
+  if (afterPath !== undefined) updates.afterPath = afterPath || null;
 
   const [pair] = await db
     .update(galleryPairsTable)

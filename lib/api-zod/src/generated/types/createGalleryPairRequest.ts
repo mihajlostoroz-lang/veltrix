@@ -9,6 +9,6 @@
 export interface CreateGalleryPairRequest {
   service?: string;
   caption?: string;
-  beforePath: string;
-  afterPath: string;
+  beforePath?: string;
+  afterPath?: string;
 }

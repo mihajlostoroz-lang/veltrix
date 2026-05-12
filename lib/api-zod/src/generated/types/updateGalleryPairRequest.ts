@@ -9,4 +9,6 @@
 export interface UpdateGalleryPairRequest {
   service?: string;
   caption?: string;
+  beforePath?: string;
+  afterPath?: string;
 }

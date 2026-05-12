@@ -151,8 +151,8 @@ export interface GalleryPairResponse {
   id: number;
   service?: string;
   caption?: string;
-  beforePath: string;
-  afterPath: string;
+  beforePath?: string;
+  afterPath?: string;
   createdAt: string;
 }
 
@@ -163,13 +163,15 @@ export interface GalleryPairListResponse {
 export interface CreateGalleryPairRequest {
   service?: string;
   caption?: string;
-  beforePath: string;
-  afterPath: string;
+  beforePath?: string;
+  afterPath?: string;
 }
 
 export interface UpdateGalleryPairRequest {
   service?: string;
   caption?: string;
+  beforePath?: string;
+  afterPath?: string;
 }
 
 export interface UploadUrlRequest {

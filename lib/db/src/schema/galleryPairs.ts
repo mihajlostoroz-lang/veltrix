@@ -4,8 +4,8 @@ export const galleryPairsTable = pgTable("gallery_pairs", {
   id: serial("id").primaryKey(),
   service: text("service"),
   caption: text("caption"),
-  beforePath: text("before_path").notNull(),
-  afterPath: text("after_path").notNull(),
+  beforePath: text("before_path"),
+  afterPath: text("after_path"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 

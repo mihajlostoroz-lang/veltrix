@@ -178,8 +178,8 @@ export const ListGalleryPairsResponse = zod.object({
       id: zod.number(),
       service: zod.string().optional(),
       caption: zod.string().optional(),
-      beforePath: zod.string(),
-      afterPath: zod.string(),
+      beforePath: zod.string().optional(),
+      afterPath: zod.string().optional(),
       createdAt: zod.string(),
     }),
   ),
@@ -191,8 +191,8 @@ export const ListGalleryPairsResponse = zod.object({
 export const CreateGalleryPairBody = zod.object({
   service: zod.string().optional(),
   caption: zod.string().optional(),
-  beforePath: zod.string(),
-  afterPath: zod.string(),
+  beforePath: zod.string().optional(),
+  afterPath: zod.string().optional(),
 });
 
 /**
@@ -205,14 +205,16 @@ export const UpdateGalleryPairParams = zod.object({
 export const UpdateGalleryPairBody = zod.object({
   service: zod.string().optional(),
   caption: zod.string().optional(),
+  beforePath: zod.string().optional(),
+  afterPath: zod.string().optional(),
 });
 
 export const UpdateGalleryPairResponse = zod.object({
   id: zod.number(),
   service: zod.string().optional(),
   caption: zod.string().optional(),
-  beforePath: zod.string(),
-  afterPath: zod.string(),
+  beforePath: zod.string().optional(),
+  afterPath: zod.string().optional(),
   createdAt: zod.string(),
 });
 

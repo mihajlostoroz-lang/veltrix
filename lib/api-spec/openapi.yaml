@@ -839,7 +839,7 @@ components:
 
     GalleryPairResponse:
       type: object
-      required: [id, beforePath, afterPath, createdAt]
+      required: [id, createdAt]
       properties:
         id:
           type: integer
@@ -865,7 +865,6 @@ components:
 
     CreateGalleryPairRequest:
       type: object
-      required: [beforePath, afterPath]
       properties:
         service:
           type: string
@@ -882,6 +881,10 @@ components:
         service:
           type: string
         caption:
+          type: string
+        beforePath:
+          type: string
+        afterPath:
           type: string
 
     UploadUrlRequest:
