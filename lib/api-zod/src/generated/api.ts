@@ -20,6 +20,7 @@ export const HealthCheckResponse = zod.object({
  */
 export const GetAvailabilityQueryParams = zod.object({
   date: zod.coerce.string(),
+  service: zod.coerce.string().optional(),
 });
 
 export const GetAvailabilityResponse = zod.object({

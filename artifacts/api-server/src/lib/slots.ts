@@ -11,8 +11,21 @@ export const ALL_SLOTS = [
   { time: "17:00", label: "5:00 PM" },
 ];
 
-// Each appointment is 5 hours; a booking at index T blocks T through T+5
-export const APPOINTMENT_SPAN = 5;
+// Duration in hours for each service
+export const SERVICE_DURATIONS: Record<string, number> = {
+  "Exterior Wash": 1,
+  "Full Interior Detail": 4,
+  "Full Detail": 5,
+  "Engine Bay Cleaning": 2,
+  "Pet Hair Removal": 2,
+  "Custom Quote": 5,
+};
+
+export const DEFAULT_DURATION = 5;
+
+export function getServiceDuration(service: string): number {
+  return SERVICE_DURATIONS[service] ?? DEFAULT_DURATION;
+}
 
 export function getSlotIndex(time: string): number {
   return ALL_SLOTS.findIndex((s) => s.time === time);
@@ -25,15 +38,18 @@ export function isWeekend(dateStr: string): boolean {
   return dow === 0 || dow === 6;
 }
 
+// Returns true if a new booking at slotIndex with newDuration hours conflicts
+// with any existing booking. existingBookings is [{timeSlot, service}].
 export function hasConflict(
-  existingSlots: string[],
-  newSlotTime: string,
-  excludeSlotTime?: string,
+  existingBookings: { timeSlot: string; service: string }[],
+  newSlotIndex: number,
+  newDuration: number,
 ): boolean {
-  const newIndex = getSlotIndex(newSlotTime);
-  return existingSlots.some((t) => {
-    if (excludeSlotTime && t === excludeSlotTime) return false;
-    const bi = getSlotIndex(t);
-    return bi >= 0 && Math.abs(newIndex - bi) <= APPOINTMENT_SPAN;
+  return existingBookings.some((b) => {
+    const bi = getSlotIndex(b.timeSlot);
+    if (bi === -1) return false;
+    const dExisting = getServiceDuration(b.service);
+    // Intervals [newSlotIndex, newSlotIndex+newDuration) and [bi, bi+dExisting) overlap if:
+    return newSlotIndex < bi + dExisting && bi < newSlotIndex + newDuration;
   });
 }

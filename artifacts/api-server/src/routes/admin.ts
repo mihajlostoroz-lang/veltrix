@@ -2,7 +2,7 @@ import { Router, type IRouter } from "express";
 import { db } from "@workspace/db";
 import { bookingsTable } from "@workspace/db";
 import { eq, and, ne, desc, count } from "drizzle-orm";
-import { ALL_SLOTS, APPOINTMENT_SPAN, getSlotIndex, isWeekend } from "../lib/slots.js";
+import { getSlotIndex, isWeekend, getServiceDuration, hasConflict } from "../lib/slots.js";
 
 const router: IRouter = Router();
 
@@ -72,7 +72,7 @@ router.post("/bookings/:id/reschedule", async (req, res) => {
 
   // Fetch all non-cancelled bookings on the new date, excluding this booking
   const existing = await db
-    .select({ timeSlot: bookingsTable.timeSlot })
+    .select({ timeSlot: bookingsTable.timeSlot, service: bookingsTable.service })
     .from(bookingsTable)
     .where(
       and(
@@ -82,10 +82,15 @@ router.post("/bookings/:id/reschedule", async (req, res) => {
       ),
     );
 
-  const conflict = existing.some((b) => {
-    const bi = getSlotIndex(b.timeSlot);
-    return bi >= 0 && Math.abs(newSlotIndex - bi) <= APPOINTMENT_SPAN;
-  });
+  // Use the rescheduled booking's own service duration for conflict checking
+  const [currentBooking] = await db
+    .select({ service: bookingsTable.service })
+    .from(bookingsTable)
+    .where(eq(bookingsTable.id, id))
+    .limit(1);
+
+  const dNew = getServiceDuration(currentBooking?.service ?? "");
+  const conflict = hasConflict(existing, newSlotIndex, dNew);
 
   if (conflict) {
     res.status(409).json({ error: "This time slot conflicts with an existing booking." });

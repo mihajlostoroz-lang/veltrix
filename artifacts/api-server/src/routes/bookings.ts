@@ -3,12 +3,12 @@ import { db } from "@workspace/db";
 import { bookingsTable } from "@workspace/db";
 import { eq, and, ne } from "drizzle-orm";
 import { sendBookingNotification, sendCustomerConfirmation } from "../lib/notify.js";
-import { ALL_SLOTS, APPOINTMENT_SPAN, getSlotIndex, isWeekend } from "../lib/slots.js";
+import { ALL_SLOTS, getSlotIndex, isWeekend, getServiceDuration, hasConflict, DEFAULT_DURATION } from "../lib/slots.js";
 
 const router: IRouter = Router();
 
 router.get("/availability", async (req, res) => {
-  const { date } = req.query;
+  const { date, service } = req.query;
 
   if (!date || typeof date !== "string") {
     res.status(400).json({ error: "date query parameter is required (YYYY-MM-DD)" });
@@ -25,19 +25,20 @@ router.get("/availability", async (req, res) => {
     return;
   }
 
+  // Duration of the incoming booking (used for forward-direction conflict check)
+  const dNew = typeof service === "string" && service
+    ? getServiceDuration(service)
+    : DEFAULT_DURATION;
+
   const existing = await db
-    .select({ timeSlot: bookingsTable.timeSlot })
+    .select({ timeSlot: bookingsTable.timeSlot, service: bookingsTable.service })
     .from(bookingsTable)
     .where(and(eq(bookingsTable.date, date), ne(bookingsTable.status, "cancelled")));
-
-  const bookedIndices = existing
-    .map((b) => getSlotIndex(b.timeSlot))
-    .filter((i) => i >= 0);
 
   const slots = ALL_SLOTS.map((slot, i) => ({
     time: slot.time,
     label: slot.label,
-    available: !bookedIndices.some((bi) => Math.abs(i - bi) <= APPOINTMENT_SPAN),
+    available: !hasConflict(existing, i, dNew),
   }));
 
   res.json({ date, slots });
@@ -67,17 +68,14 @@ router.post("/bookings", async (req, res) => {
     return;
   }
 
+  const dNew = getServiceDuration(service as string);
+
   const existing = await db
-    .select({ timeSlot: bookingsTable.timeSlot })
+    .select({ timeSlot: bookingsTable.timeSlot, service: bookingsTable.service })
     .from(bookingsTable)
     .where(and(eq(bookingsTable.date, date), ne(bookingsTable.status, "cancelled")));
 
-  const conflict = existing.some((b) => {
-    const bi = getSlotIndex(b.timeSlot);
-    return bi >= 0 && Math.abs(newSlotIndex - bi) <= APPOINTMENT_SPAN;
-  });
-
-  if (conflict) {
+  if (hasConflict(existing, newSlotIndex, dNew)) {
     res.status(409).json({ error: "This time slot conflicts with an existing booking. Please choose another." });
     return;
   }

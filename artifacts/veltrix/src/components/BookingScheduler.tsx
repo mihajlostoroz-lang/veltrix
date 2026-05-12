@@ -3,12 +3,12 @@ import { useGetAvailability, useCreateBooking } from "@workspace/api-client-reac
 import type { TimeSlot } from "@workspace/api-client-react";
 
 const SERVICES = [
-  { id: "exterior", label: "Exterior Wash", price: "$40+", icon: "🚿" },
-  { id: "interior", label: "Full Interior Detail", price: "$100+", icon: "🪣" },
-  { id: "full", label: "Full Detail", price: "$160+", icon: "✨" },
-  { id: "engine", label: "Engine Bay Cleaning", price: "+$50", icon: "⚙️" },
-  { id: "pet", label: "Pet Hair Removal", price: "+$30", icon: "🐾" },
-  { id: "custom", label: "Custom Quote", price: "Call us", icon: "💎" },
+  { id: "exterior", label: "Exterior Wash", price: "$40+", icon: "🚿", duration: "1 hr" },
+  { id: "interior", label: "Full Interior Detail", price: "$100+", icon: "🪣", duration: "4 hrs" },
+  { id: "full", label: "Full Detail", price: "$160+", icon: "✨", duration: "5 hrs" },
+  { id: "engine", label: "Engine Bay Cleaning", price: "+$50", icon: "⚙️", duration: "2 hrs" },
+  { id: "pet", label: "Pet Hair Removal", price: "+$30", icon: "🐾", duration: "2 hrs" },
+  { id: "custom", label: "Custom Quote", price: "Call us", icon: "💎", duration: "Varies" },
 ];
 
 const btn: React.CSSProperties = {
@@ -107,7 +107,7 @@ export default function BookingScheduler() {
   const dates = getAvailableDates();
 
   const { data: availability, isLoading: slotsLoading } = useGetAvailability(
-    { date: selectedDate || "1970-01-01" },
+    { date: selectedDate || "1970-01-01", service: selectedService || undefined },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     { query: { enabled: !!selectedDate } as any }
   );
@@ -212,7 +212,10 @@ export default function BookingScheduler() {
                 }}>
                 <div style={{ fontSize: "1.4rem", marginBottom: 6 }}>{s.icon}</div>
                 <div style={{ fontFamily: "'Syne', sans-serif", fontSize: ".85rem", fontWeight: 700, color: "#0f172a", marginBottom: 2 }}>{s.label}</div>
-                <div style={{ fontSize: ".75rem", color: "#2563eb", fontWeight: 600 }}>{s.price}</div>
+                <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+                  <span style={{ fontSize: ".75rem", color: "#2563eb", fontWeight: 600 }}>{s.price}</span>
+                  <span style={{ fontSize: ".7rem", color: "#94a3b8" }}>· {s.duration}</span>
+                </div>
               </button>
             ))}
           </div>
@@ -257,7 +260,12 @@ export default function BookingScheduler() {
             Available slots for <strong>{formatDate(selectedDate)}</strong>
           </p>
           <p style={{ fontSize: ".78rem", color: "#94a3b8", marginBottom: 16 }}>
-            Each appointment is 5 hours. Booked slots and overlapping times are shown as unavailable.
+            {(() => {
+              const svc = SERVICES.find((s) => s.label === selectedService);
+              return svc
+                ? `${selectedService} takes ${svc.duration}. Booked and overlapping times are shown as unavailable.`
+                : "Booked and overlapping times are shown as unavailable.";
+            })()}
           </p>
           {slotsLoading ? (
             <div style={{ textAlign: "center", padding: "32px 0", color: "#64748b" }}>

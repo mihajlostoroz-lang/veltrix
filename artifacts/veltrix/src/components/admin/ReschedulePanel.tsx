@@ -44,7 +44,7 @@ export default function ReschedulePanel({
   const [error, setError] = useState("");
 
   const { data: availability, isLoading } = useGetAvailability(
-    { date: selectedDate },
+    { date: selectedDate, service: booking.service || undefined },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     { query: { enabled: !!selectedDate } as any },
   );

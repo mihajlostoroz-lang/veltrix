@@ -91,6 +91,10 @@ export type GetAvailabilityParams = {
    * Date in YYYY-MM-DD format
    */
   date: string;
+  /**
+   * Service name to use for duration-based conflict checking
+   */
+  service?: string;
 };
 
 export type ListBookingsParams = {

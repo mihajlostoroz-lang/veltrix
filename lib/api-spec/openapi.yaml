@@ -38,6 +38,12 @@ paths:
           schema:
             type: string
             description: Date in YYYY-MM-DD format
+        - name: service
+          in: query
+          required: false
+          schema:
+            type: string
+            description: Service name to use for duration-based conflict checking
       responses:
         "200":
           description: Available slots
