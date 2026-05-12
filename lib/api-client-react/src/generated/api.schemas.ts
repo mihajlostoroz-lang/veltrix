@@ -86,6 +86,43 @@ export interface ErrorResponse {
   error: string;
 }
 
+export interface UploadUrlRequest {
+  /** @minLength 1 */
+  name: string;
+  /** @minimum 1 */
+  size: number;
+  /** @minLength 1 */
+  contentType: string;
+}
+
+export interface UploadUrlResponse {
+  uploadURL: string;
+  objectPath: string;
+  metadata?: UploadUrlRequest;
+}
+
+export interface GalleryPhotoResponse {
+  id: number;
+  service: string;
+  photoType: string;
+  objectPath: string;
+  caption?: string;
+  sortOrder: number;
+  createdAt: string;
+}
+
+export interface GalleryPhotoListResponse {
+  photos: GalleryPhotoResponse[];
+}
+
+export interface CreateGalleryPhotoRequest {
+  service: string;
+  photoType: string;
+  objectPath: string;
+  caption?: string;
+  sortOrder?: number;
+}
+
 export type GetAvailabilityParams = {
   /**
    * Date in YYYY-MM-DD format
@@ -100,4 +137,8 @@ export type GetAvailabilityParams = {
 export type ListBookingsParams = {
   date?: string;
   status?: string;
+};
+
+export type ListGalleryPhotosParams = {
+  service?: string;
 };

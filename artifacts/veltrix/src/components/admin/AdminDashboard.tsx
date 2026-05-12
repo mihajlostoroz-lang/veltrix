@@ -3,8 +3,9 @@ import { useQueryClient } from "@tanstack/react-query";
 import StatsBar from "./StatsBar";
 import DayView from "./DayView";
 import BookingList from "./BookingList";
+import GalleryManager from "./GalleryManager";
 
-type View = "schedule" | "list";
+type View = "schedule" | "list" | "gallery";
 
 export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const [view, setView] = useState<View>("schedule");
@@ -74,13 +75,13 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
           }}>
             {tabBtn("schedule", "Day View", "📅")}
             {tabBtn("list", "All Bookings", "📋")}
+            {tabBtn("gallery", "Gallery", "🖼️")}
           </div>
         </div>
 
-        {view === "schedule"
-          ? <DayView selectedDate={selectedDate} onDateChange={setSelectedDate} />
-          : <BookingList />
-        }
+        {view === "schedule" && <DayView selectedDate={selectedDate} onDateChange={setSelectedDate} />}
+        {view === "list" && <BookingList />}
+        {view === "gallery" && <GalleryManager />}
       </div>
     </div>
   );

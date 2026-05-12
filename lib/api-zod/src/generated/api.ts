@@ -131,6 +131,84 @@ export const UpdateBookingStatusResponse = zod.object({
 });
 
 /**
+ * @summary Request a presigned URL for file upload
+ */
+
+export const RequestUploadUrlBody = zod.object({
+  name: zod.string().min(1),
+  size: zod.number().min(1),
+  contentType: zod.string().min(1),
+});
+
+export const RequestUploadUrlResponse = zod.object({
+  uploadURL: zod.string().url(),
+  objectPath: zod.string(),
+  metadata: zod
+    .object({
+      name: zod.string().min(1),
+      size: zod.number().min(1),
+      contentType: zod.string().min(1),
+    })
+    .optional(),
+});
+
+/**
+ * @summary Serve an uploaded object
+ */
+export const GetStorageObjectParams = zod.object({
+  objectPath: zod.coerce.string(),
+});
+
+/**
+ * @summary List gallery photos
+ */
+export const ListGalleryPhotosQueryParams = zod.object({
+  service: zod.coerce.string().optional(),
+});
+
+export const ListGalleryPhotosResponse = zod.object({
+  photos: zod.array(
+    zod.object({
+      id: zod.number(),
+      service: zod.string(),
+      photoType: zod.string(),
+      objectPath: zod.string(),
+      caption: zod.string().optional(),
+      sortOrder: zod.number(),
+      createdAt: zod.string(),
+    }),
+  ),
+});
+
+/**
+ * @summary Add a gallery photo entry after upload
+ */
+export const CreateGalleryPhotoBody = zod.object({
+  service: zod.string(),
+  photoType: zod.string(),
+  objectPath: zod.string(),
+  caption: zod.string().optional(),
+  sortOrder: zod.number().optional(),
+});
+
+/**
+ * @summary Delete a gallery photo
+ */
+export const DeleteGalleryPhotoParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const DeleteGalleryPhotoResponse = zod.object({
+  id: zod.number(),
+  service: zod.string(),
+  photoType: zod.string(),
+  objectPath: zod.string(),
+  caption: zod.string().optional(),
+  sortOrder: zod.number(),
+  createdAt: zod.string(),
+});
+
+/**
  * @summary Get booking stats
  */
 export const GetAdminStatsResponse = zod.object({
