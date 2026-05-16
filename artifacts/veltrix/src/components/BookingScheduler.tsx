@@ -47,18 +47,18 @@ const labelStyle: React.CSSProperties = {
   display: "block", marginBottom: 6
 };
 
+const DOW_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
 function getAvailableDates() {
-  const dates: { date: string; day: string; dow: string }[] = [];
+  const dates: { date: string; day: string; dow: string; isWeekend: boolean }[] = [];
   const today = new Date();
-  for (let i = 1; i <= 60; i++) {
+  for (let i = 1; i <= 30; i++) {
     const d = new Date(today);
     d.setDate(today.getDate() + i);
     const dow = d.getDay();
-    if (dow !== 0 && dow !== 6) continue;
     const dateStr = d.toISOString().split("T")[0];
     const day = d.getDate().toString();
-    const dowLabel = dow === 0 ? "Sun" : "Sat";
-    dates.push({ date: dateStr, day, dow: dowLabel });
+    dates.push({ date: dateStr, day, dow: DOW_LABELS[dow], isWeekend: dow === 0 || dow === 6 });
   }
   return dates;
 }
@@ -237,8 +237,11 @@ export default function BookingScheduler() {
       {/* Step 1: Date */}
       {step === 1 && (
         <div>
-          <p style={{ fontSize: ".88rem", color: "#888", marginBottom: 20 }}>
-            Pick a date — <strong style={{ color: "#1a1a2e" }}>{selectedService}</strong>. We're available <strong style={{ color: "#1a1a2e" }}>Saturdays & Sundays only</strong>.
+          <p style={{ fontSize: ".88rem", color: "#888", marginBottom: 8 }}>
+            Pick a date for <strong style={{ color: "#1a1a2e" }}>{selectedService}</strong>.
+          </p>
+          <p style={{ fontSize: ".78rem", color: "#bbb", marginBottom: 16 }}>
+            <strong style={{ color: "#2563eb" }}>Mon–Fri:</strong> 3 PM–5 PM &nbsp;·&nbsp; <strong style={{ color: "#2563eb" }}>Sat–Sun:</strong> 8 AM–6 PM
           </p>
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 24 }}>
             {dates.map((d) => (
@@ -246,12 +249,13 @@ export default function BookingScheduler() {
                 style={{
                   background: selectedDate === d.date ? "#1a1a2e" : "#fff",
                   color: selectedDate === d.date ? "#fff" : "#1a1a2e",
-                  border: `1px solid ${selectedDate === d.date ? "#1a1a2e" : "rgba(26,26,46,0.1)"}`,
+                  border: `1px solid ${selectedDate === d.date ? "#1a1a2e" : d.isWeekend ? "rgba(37,99,235,0.25)" : "rgba(26,26,46,0.1)"}`,
                   borderRadius: 12, padding: "10px 14px",
-                  cursor: "pointer", textAlign: "center", minWidth: 58, transition: "all .2s",
+                  cursor: "pointer", textAlign: "center", minWidth: 52, transition: "all .2s",
                   fontFamily: "'Poppins', sans-serif"
                 }}>
-                <div style={{ fontSize: ".62rem", fontWeight: 700, opacity: .7, letterSpacing: ".05em" }}>{d.dow}</div>
+                <div style={{ fontSize: ".62rem", fontWeight: 700, opacity: .7, letterSpacing: ".05em",
+                  color: selectedDate === d.date ? "#fff" : d.isWeekend ? "#2563eb" : undefined }}>{d.dow}</div>
                 <div style={{ fontSize: "1.1rem", fontWeight: 800 }}>{d.day}</div>
               </button>
             ))}

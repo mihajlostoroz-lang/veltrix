@@ -11,6 +11,16 @@ export const ALL_SLOTS = [
   { time: "17:00", label: "5:00 PM" },
 ];
 
+// Weekdays (Mon–Fri): 3 PM – 5 PM only
+export const WEEKDAY_SLOTS = [
+  { time: "15:00", label: "3:00 PM" },
+  { time: "16:00", label: "4:00 PM" },
+];
+
+export function getSlotsForDate(dateStr: string) {
+  return isWeekend(dateStr) ? ALL_SLOTS : WEEKDAY_SLOTS;
+}
+
 // Duration in hours for each service
 export const SERVICE_DURATIONS: Record<string, number> = {
   "Exterior Wash": 1,
