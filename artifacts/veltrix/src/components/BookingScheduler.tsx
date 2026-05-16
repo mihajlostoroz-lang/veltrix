@@ -7,7 +7,7 @@ const SERVICES = [
   { id: "interior", label: "Full Interior Detail", price: "$100+", icon: "🪣", duration: "4 hrs" },
   { id: "full", label: "Full Detail", price: "$160+", icon: "✨", duration: "5 hrs" },
   { id: "engine", label: "Engine Bay Cleaning", price: "+$50", icon: "⚙️", duration: "2 hrs" },
-  { id: "pet", label: "Pet Hair Removal", price: "+$30", icon: "🐾", duration: "2 hrs" },
+
   { id: "custom", label: "Custom Quote", price: "Call us", icon: "💎", duration: "Varies" },
 ];
 
