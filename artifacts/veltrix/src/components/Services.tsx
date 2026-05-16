@@ -27,13 +27,8 @@ const services = [
     note: "Add-on: +$30", tag: "Add-on"
   },
   {
-    icon: "🔮", title: "Paint Correction",
-    desc: "Remove swirl marks, light scratches and oxidation with professional multi-stage polishing for a showroom-level finish.",
-    note: "Custom Quote", tag: "Premium"
-  },
-  {
-    icon: "🛡️", title: "Ceramic Coating",
-    desc: "Long-lasting nano-ceramic protection that repels water, resists UV, and keeps your paint looking flawless for years.",
+    icon: "💎", title: "Paint Correction & Ceramic",
+    desc: "Remove swirl marks, light scratches and oxidation. Optional ceramic coating for long-lasting protection and gloss.",
     note: "Custom Quote", tag: "Premium"
   },
 ];

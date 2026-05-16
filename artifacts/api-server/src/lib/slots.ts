@@ -28,8 +28,7 @@ export const SERVICE_DURATIONS: Record<string, number> = {
   "Full Detail": 5,
   "Engine Bay Cleaning": 2,
   "Pet Hair Removal": 2,
-  "Paint Correction": 6,
-  "Ceramic Coating": 8,
+  "Custom Quote": 5,
 };
 
 export const DEFAULT_DURATION = 5;
