@@ -8,7 +8,8 @@ const SERVICES = [
   { id: "full", label: "Full Detail", price: "$160+", icon: "✨", duration: "5 hrs" },
   { id: "engine", label: "Engine Bay Cleaning", price: "+$50", icon: "⚙️", duration: "2 hrs" },
   { id: "pet", label: "Pet Hair Removal", price: "+$30", icon: "🐾", duration: "2 hrs" },
-  { id: "custom", label: "Custom Quote", price: "Call us", icon: "💎", duration: "Varies" },
+  { id: "paint", label: "Paint Correction", price: "Quote", icon: "🔮", duration: "6 hrs" },
+  { id: "ceramic", label: "Ceramic Coating", price: "Quote", icon: "🛡️", duration: "8 hrs" },
 ];
 
 const btn: React.CSSProperties = {
