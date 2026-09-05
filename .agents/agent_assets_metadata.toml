@@ -1,0 +1,16 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "zevXF_s6YVkKIEIumWYQJ"
+uri = "file://veltrix-project.zip"
+type = "unspecified"
+title = "Veltrix project ZIP"
+description = "Downloadable ZIP containing the current Veltrix website, API server, shared libraries, and project configuration."
+logical_id = "0646c62b-30db-4c80-a8d0-18c27f8ffd06"
+content_hash = "sha256:250371a7d418d32c5bd022afb229b7fd79370a877470fd2b51ba2b60ccefc799"
+size = 398525
+mtime_ms = 1788616979477
+storage_uri = "gcs://replit-rams-assets-riker/rams/assets/repl:a9a2c29f-88f2-4687-98f3-58e1c0947f74/0646c62b-30db-4c80-a8d0-18c27f8ffd06/e498cc2d-75ed-49e7-ac5f-bbb35bc787c8"
+storage_version_token = "1788616983555363"
+content_type = "application/octet-stream"
