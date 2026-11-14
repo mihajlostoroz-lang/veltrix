@@ -40,7 +40,7 @@ export default function Contact() {
 
           <div style={{ display: "flex", flexDirection: "column", gap: 20, marginBottom: 36 }}>
             {[
-              { icon: "📞", label: "Phone", val: "(862) 394-3198", href: "tel:8623943198" },
+              { icon: "📞", label: "Phone", val: "(908) 499-6895", href: "tel:9084996895" },
               { icon: "📍", label: "Service Area", val: "Union County, NJ & 10-Mile Radius", href: undefined },
               { icon: "🕐", label: "Hours", val: "Saturdays & Sundays", href: undefined },
             ].map((item) => (

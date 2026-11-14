@@ -127,8 +127,8 @@ export async function sendCustomerConfirmation(booking: Booking): Promise<void> 
         </div>
 
         <div style="text-align: center; margin-bottom: 24px;">
-          <a href="tel:8623943198" style="display: inline-block; background: #2563eb; color: #fff; text-decoration: none; padding: 14px 32px; border-radius: 50px; font-size: 14px; font-weight: 600;">
-            📞 Call Us: (862) 394-3198
+          <a href="tel:9084996895" style="display: inline-block; background: #2563eb; color: #fff; text-decoration: none; padding: 14px 32px; border-radius: 50px; font-size: 14px; font-weight: 600;">
+            📞 Call Us: (908) 499-6895
           </a>
         </div>
 

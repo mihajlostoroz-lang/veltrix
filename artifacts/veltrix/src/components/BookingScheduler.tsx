@@ -193,8 +193,8 @@ export default function BookingScheduler() {
             }}>Pending Confirmation</span>
           </div>
         </div>
-        <a href="tel:8623943198" style={{ ...btnBlue, textDecoration: "none", display: "inline-block" }}>
-          📞 Call Us: (862) 394-3198
+        <a href="tel:9084996895" style={{ ...btnBlue, textDecoration: "none", display: "inline-block" }}>
+          📞 Call Us: (908) 499-6895
         </a>
       </div>
     );

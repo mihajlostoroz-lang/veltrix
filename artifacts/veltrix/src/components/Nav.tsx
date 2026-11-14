@@ -46,11 +46,11 @@ export default function Nav() {
         </ul>
 
         <div style={{ display: "flex", alignItems: "center", gap: 14 }} className="nav-right-desktop">
-          <a href="tel:8623943198" style={{
+          <a href="tel:9084996895" style={{
             fontSize: ".85rem", fontWeight: 600, color: "#1a1a2e",
             textDecoration: "none"
           }}>
-            (862) 394-3198
+            (908) 499-6895
           </a>
           <a href="#contact" style={{
             background: "#2563eb", color: "#fff", borderRadius: 100,
@@ -93,11 +93,11 @@ export default function Nav() {
               {id.charAt(0).toUpperCase() + id.slice(1)}
             </a>
           ))}
-          <a href="tel:8623943198" onClick={closeMob} style={{
+          <a href="tel:9084996895" onClick={closeMob} style={{
             fontFamily: "'Poppins', sans-serif", fontSize: "1.3rem",
             fontWeight: 600, color: "#1a1a2e", textDecoration: "none"
           }}>
-            (862) 394-3198
+            (908) 499-6895
           </a>
           <a href="#contact" onClick={closeMob} style={{
             background: "#2563eb", color: "#fff",

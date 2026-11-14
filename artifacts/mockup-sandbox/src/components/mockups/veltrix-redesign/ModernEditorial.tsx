@@ -35,7 +35,7 @@ export function ModernEditorial() {
           ))}
         </div>
         <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-          <a href="tel:8623943198" style={{ fontSize: ".82rem", fontWeight: 600, color: "#1a1a2e", textDecoration: "none" }}>(862) 394-3198</a>
+          <a href="tel:9084996895" style={{ fontSize: ".82rem", fontWeight: 600, color: "#1a1a2e", textDecoration: "none" }}>(908) 499-6895</a>
           <a href="#" style={{ background: "#2563eb", color: "#fff", padding: "9px 20px", borderRadius: 100, fontSize: ".82rem", fontWeight: 600, textDecoration: "none" }}>Book Now</a>
         </div>
       </nav>
@@ -82,7 +82,7 @@ export function ModernEditorial() {
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
               {[
-                { icon: "📞", label: "Phone", val: "(862) 394-3198" },
+                { icon: "📞", label: "Phone", val: "(908) 499-6895" },
                 { icon: "🕐", label: "Hours", val: "Sat & Sun" },
                 { icon: "📍", label: "Area", val: "Union County" },
                 { icon: "⭐", label: "Rating", val: "5.0 on Google" },
@@ -211,7 +211,7 @@ export function ModernEditorial() {
       <footer style={{ background: "#1a1a2e", padding: "44px 5%", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16 }}>
         <div style={{ fontWeight: 800, fontSize: "1.2rem", color: "#fff" }}>Velt<span style={{ color: "#3b82f6" }}>rix</span></div>
         <div style={{ fontSize: ".78rem", color: "rgba(255,255,255,0.3)" }}>© {new Date().getFullYear()} Veltrix Mobile Detailing · Union County, NJ</div>
-        <a href="tel:8623943198" style={{ fontSize: ".85rem", fontWeight: 600, color: "rgba(255,255,255,0.6)", textDecoration: "none" }}>(862) 394-3198</a>
+        <a href="tel:9084996895" style={{ fontSize: ".85rem", fontWeight: 600, color: "rgba(255,255,255,0.6)", textDecoration: "none" }}>(908) 499-6895</a>
       </footer>
     </div>
   );

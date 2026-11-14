@@ -43,7 +43,7 @@ export function CleanMinimal() {
           ))}
         </div>
         <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-          <a href="tel:8623943198" style={{ fontSize: ".85rem", fontWeight: 600, color: "#111", textDecoration: "none" }}>(862) 394-3198</a>
+          <a href="tel:9084996895" style={{ fontSize: ".85rem", fontWeight: 600, color: "#111", textDecoration: "none" }}>(908) 499-6895</a>
           <a href="#" style={{ background: "#111", color: "#fff", padding: "9px 20px", borderRadius: 6, fontSize: ".85rem", fontWeight: 600, textDecoration: "none" }}>Book Now</a>
         </div>
       </nav>
@@ -226,7 +226,7 @@ export function CleanMinimal() {
       <footer style={{ background: "#050505", padding: "36px 5%", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
         <div style={{ fontWeight: 800, fontSize: "1.1rem", color: "#fff" }}>Velt<span style={{ color: "#2563eb" }}>rix</span></div>
         <div style={{ fontSize: ".78rem", color: "#555" }}>© {new Date().getFullYear()} Veltrix Mobile Detailing · Union County, NJ</div>
-        <a href="tel:8623943198" style={{ fontSize: ".85rem", fontWeight: 600, color: "#fff", textDecoration: "none" }}>(862) 394-3198</a>
+        <a href="tel:9084996895" style={{ fontSize: ".85rem", fontWeight: 600, color: "#fff", textDecoration: "none" }}>(908) 499-6895</a>
       </footer>
     </div>
   );

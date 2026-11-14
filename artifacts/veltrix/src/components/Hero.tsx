@@ -110,7 +110,7 @@ export default function Hero() {
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
             {[
-              { icon: "📞", label: "Phone", val: "(862) 394-3198" },
+              { icon: "📞", label: "Phone", val: "(908) 499-6895" },
               { icon: "🕐", label: "Hours", val: "Sat & Sun" },
               { icon: "📍", label: "Area", val: "Union County" },
               { icon: "⭐", label: "Rating", val: "5.0 on Google" },
